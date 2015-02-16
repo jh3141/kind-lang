@@ -13,5 +13,5 @@ TEST_CASE("Tokenizer returns end of file marker", "[tokenizer]")
     stringstream inputStream (input);
     Tokenizer sut (inputStream);
     
-    REQUIRE(sut.nextToken().tokenType() == Token::Type::EOF);
+    REQUIRE(sut.nextToken().tokenType() == Token::Type::T_EOF);
 }

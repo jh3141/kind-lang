@@ -13,7 +13,7 @@ namespace kind
             std::istream & in;
         public:
             Tokenizer(std::istream & in);
-            
+            Token nextToken ();
         };
         
         void printVersion (std::ostream & out);

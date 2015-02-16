@@ -1,6 +1,6 @@
 export TOP=$(PWD)
 export CXXFLAGS=-std=c++11 -O3 -I$(TOP)/include
-export LDFLAGS=-L$(TOP)/libX
+export LDFLAGS=-L$(TOP)/lib
 export LIBS=-lkind-tokenizer
 SUBDIRS=tokenizer parser tests
 
