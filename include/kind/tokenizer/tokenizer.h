@@ -16,6 +16,9 @@ namespace kind
             Token nextToken ();
         protected:
             Token readIntLiteral ();
+            bool isWhitespace(int ch) { 
+                return ch <= ' ' && (ch == ' ' || ch == '\t' || ch == '\r' || ch == '\n');
+            }
         };
         
         void printVersion (std::ostream & out);

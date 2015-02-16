@@ -8,7 +8,8 @@ namespace kind
             enum Type
             {
                 T_EOF,
-                T_INTLITERAL
+                T_INTLITERAL,
+                T_COMMA
             };
             
         private:

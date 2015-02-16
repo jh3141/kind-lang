@@ -22,8 +22,6 @@ TEST_CASE("Tokenizer parses single digit", "[tokenizer]")
     stringstream inputStream (input);
     Tokenizer sut (inputStream);
     
-    cout << inputStream.peek() << endl;
-
     REQUIRE(sut.nextToken().tokenType() == Token::Type::T_INTLITERAL);
     REQUIRE(sut.nextToken().tokenType() == Token::Type::T_EOF);
 }
@@ -34,8 +32,16 @@ TEST_CASE("Tokenizer parses multiple digits", "[tokenizer]")
     stringstream inputStream (input);
     Tokenizer sut (inputStream);
     
-    cout << inputStream.peek() << endl;
+    REQUIRE(sut.nextToken().tokenType() == Token::Type::T_INTLITERAL);
+    REQUIRE(sut.nextToken().tokenType() == Token::Type::T_EOF);
+}
 
+TEST_CASE("Tokenizer ignores whitespace", "[tokenizer]")
+{
+    string input = "  \t\r\n 1234";
+    stringstream inputStream (input);
+    Tokenizer sut (inputStream);
+    
     REQUIRE(sut.nextToken().tokenType() == Token::Type::T_INTLITERAL);
     REQUIRE(sut.nextToken().tokenType() == Token::Type::T_EOF);
 }
@@ -46,9 +52,18 @@ TEST_CASE("Can parse multiple tokens", "[tokenizer]")
     stringstream inputStream (input);
     Tokenizer sut (inputStream);
     
-    cout << inputStream.peek() << endl;
+    REQUIRE(sut.nextToken().tokenType() == Token::Type::T_INTLITERAL);
+    REQUIRE(sut.nextToken().tokenType() == Token::Type::T_INTLITERAL);
+    REQUIRE(sut.nextToken().tokenType() == Token::Type::T_EOF);
+}
 
+TEST_CASE("Integer literal terminated by punctuation correctly", "[tokenizer]")
+{
+    string input = "1234,";
+    stringstream inputStream (input);
+    Tokenizer sut (inputStream);
+    
     REQUIRE(sut.nextToken().tokenType() == Token::Type::T_INTLITERAL);
-    REQUIRE(sut.nextToken().tokenType() == Token::Type::T_INTLITERAL);
+    REQUIRE(sut.nextToken().tokenType() == Token::Type::T_COMMA);
     REQUIRE(sut.nextToken().tokenType() == Token::Type::T_EOF);
 }
