@@ -10,8 +10,8 @@ all: $(TARGET)
 clean:
 	rm -f $(OBJS) $(DEPS) $(TARGET)
 
-$(TARGET): $(OBJS)
-	g++ -o $@ $(LDFLAGS) $^ $(LIBS)
+$(TARGET): $(OBJS) $(TOP)/lib/*.a
+	g++ -o $@ $(LDFLAGS) $(OBJS) $(LIBS)
 	
 showconf:
 	@echo TOP=$(TOP)

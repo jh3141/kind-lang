@@ -1,4 +1,6 @@
 #include "kind/tokenizer/tokenizer.h"
+#include <cctype>
+
 namespace kind
 {
     namespace tokenizer
@@ -10,8 +12,16 @@ namespace kind
         
         Token Tokenizer::nextToken()
         {
-            return Token(Token::Type::T_EOF);
+            if (std::isdigit (in.peek()))
+                return readIntLiteral ();
+            else
+                return Token(Token::Type::T_EOF);
         }
-        
+
+        Token Tokenizer::readIntLiteral ()
+        {
+            in.get();
+            return Token (Token::Type::T_INTLITERAL);
+        }
     }
 }

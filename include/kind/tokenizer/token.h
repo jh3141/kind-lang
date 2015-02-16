@@ -7,7 +7,8 @@ namespace kind
         public:
             enum Type
             {
-                T_EOF
+                T_EOF,
+                T_INTLITERAL
             };
             
         private:

@@ -14,6 +14,8 @@ namespace kind
         public:
             Tokenizer(std::istream & in);
             Token nextToken ();
+        protected:
+            Token readIntLiteral ();
         };
         
         void printVersion (std::ostream & out);
