@@ -20,7 +20,8 @@ namespace kind
 
         Token Tokenizer::readIntLiteral ()
         {
-            in.get();
+            while (std::isdigit(in.get()))
+                ;
             return Token (Token::Type::T_INTLITERAL);
         }
     }
