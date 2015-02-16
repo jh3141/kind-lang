@@ -12,24 +12,21 @@ namespace kind
         
         Token Tokenizer::nextToken()
         {
-            int peek = in.peek();
-            while (isWhitespace(peek))
+            int ch = in.get();
+            while (isWhitespace(ch))
             {
-                in.get();
-                peek = in.peek ();
+                ch = in.get ();
             }
-            if (std::isdigit (peek))
-                return readIntLiteral ();
-            else if (peek == ',')
-            {
-                in.get ();
+            
+            if (std::isdigit (ch))
+                return readIntLiteral (ch);
+            else if (ch == ',')
                 return Token(Token::Type::T_COMMA);
-            }
             else
                 return Token(Token::Type::T_EOF);
         }
 
-        Token Tokenizer::readIntLiteral ()
+        Token Tokenizer::readIntLiteral (int firstChar)
         {
             int read;
             while (std::isdigit(read = in.get()))
