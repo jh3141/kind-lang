@@ -91,7 +91,7 @@ namespace kind
             
             if (std::isdigit (ch))
                 return readIntLiteral (ch);
-            else if (std::isalpha (ch) || ch == '_' || ch == '$')
+            else if (isIdStart (ch))
                 return readIdOrKeyword (ch);
             else if ((foundMultiCharPunctuation = multiCharPunctuation.find(multichar)) != multiCharPunctuation.end())
             {
@@ -115,8 +115,7 @@ namespace kind
         
         Token Tokenizer::readIdOrKeyword (int firstChar)
         {
-            int read;
-            while (std::isalnum (read = in.get()) || read == '_' || read == '$')
+            while (isIdContinuation(in.get()))
                 ;
             in.unget ();
             return Token (Token::Type::T_ID);
