@@ -34,7 +34,31 @@ namespace kind
         		T_DOT,
         		T_MINUS,
         		T_PLUS,
-        		T_EQ
+        		T_EQ,
+        		T_LXOR,
+        		T_LAND,
+        		T_LOR,
+        		T_COMMENT_EOL,
+        		T_COMMENT_BEGIN,
+        		T_COMMENT_END,
+        		T_SCOPE,
+        		T_PLUS_EQ,
+        		T_MINUS_EQ,
+        		T_STAR_EQ,
+        		T_SLASH_EQ,
+        		T_MOD_EQ,
+        		T_XOR_EQ,
+        		T_AND_EQ,
+        		T_OR_EQ,
+        		T_DOUBLEMINUS,
+        		T_DOUBLEPLUS,
+        		T_ARROW,
+        		T_LTE,
+        		T_GTE,
+        		T_LSH,
+        		T_RSH,
+        		T_NEQ
+        		
             };
             
         private:

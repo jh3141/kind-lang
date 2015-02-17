@@ -2,11 +2,19 @@
 #include <cctype>
 #include <map>
 
+#if defined(__GNUC__)
+// FIXME clang defines __GNUC__ but does it use the same multichar literal representation?
+#define MK_MULTICHAR(first,second) (int)((((first)&0xFF) << 8)|((second)&0xFF))
+#else
+#error Cannot compile with unknown compiler as we use multichar literals, which are implementation defined.
+#endif
+
 namespace kind
 {
     namespace tokenizer
     {
         static std::map<char,Token::Type> punctuation;
+        static std::map<int,Token::Type> multiCharPunctuation;
         static bool punctuationInitialized = false;
         static void initPunctuation ()
         {
@@ -36,6 +44,29 @@ namespace kind
             punctuation['-'] = Token::Type::T_MINUS;
             punctuation['+'] = Token::Type::T_PLUS;
             punctuation['='] = Token::Type::T_EQ;
+            multiCharPunctuation['^^'] = Token::Type::T_LXOR;
+            multiCharPunctuation['&&'] = Token::Type::T_LAND;
+            multiCharPunctuation['||'] = Token::Type::T_LOR;
+            multiCharPunctuation['//'] = Token::Type::T_COMMENT_EOL;
+            multiCharPunctuation['/*'] = Token::Type::T_COMMENT_BEGIN;
+            multiCharPunctuation['*/'] = Token::Type::T_COMMENT_END;
+            multiCharPunctuation['::'] = Token::Type::T_SCOPE;
+            multiCharPunctuation['+='] = Token::Type::T_PLUS_EQ;
+            multiCharPunctuation['-='] = Token::Type::T_MINUS_EQ;
+            multiCharPunctuation['*='] = Token::Type::T_STAR_EQ;
+            multiCharPunctuation['/='] = Token::Type::T_SLASH_EQ;
+            multiCharPunctuation['%='] = Token::Type::T_MOD_EQ;
+            multiCharPunctuation['^='] = Token::Type::T_XOR_EQ;
+            multiCharPunctuation['&='] = Token::Type::T_AND_EQ;
+            multiCharPunctuation['|='] = Token::Type::T_OR_EQ;
+            multiCharPunctuation['--'] = Token::Type::T_DOUBLEMINUS;
+            multiCharPunctuation['++'] = Token::Type::T_DOUBLEPLUS;
+            multiCharPunctuation['->'] = Token::Type::T_ARROW;
+            multiCharPunctuation['<='] = Token::Type::T_LTE;
+            multiCharPunctuation['>='] = Token::Type::T_GTE;
+            multiCharPunctuation['<<'] = Token::Type::T_LSH;
+            multiCharPunctuation['>>'] = Token::Type::T_RSH;
+            multiCharPunctuation['!='] = Token::Type::T_NEQ;
         }
         
         Tokenizer::Tokenizer(std::istream & in)
@@ -54,9 +85,17 @@ namespace kind
             }
             
             std::map<char,Token::Type>::iterator foundPunctuation;
+            std::map<int,Token::Type>::iterator foundMultiCharPunctuation;
+            
+            int multichar = MK_MULTICHAR(ch, in.peek());
             
             if (std::isdigit (ch))
                 return readIntLiteral (ch);
+            else if ((foundMultiCharPunctuation = multiCharPunctuation.find(multichar)) != multiCharPunctuation.end())
+            {
+                in.get();
+                return Token(foundMultiCharPunctuation->second);
+            }
             else if ((foundPunctuation = punctuation.find(ch)) != punctuation.end())
                 return Token(foundPunctuation->second);
             else
