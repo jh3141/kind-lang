@@ -77,17 +77,17 @@ namespace kind
         
         Token Tokenizer::nextToken()
         {
-            int ch = in.get();
+            int ch = nextChar ();
             
             while (isWhitespace(ch))
             {
-                ch = in.get ();
+                ch = nextChar ();
             }
             
             std::map<char,Token::Type>::iterator foundPunctuation;
             std::map<int,Token::Type>::iterator foundMultiCharPunctuation;
             
-            int multichar = MK_MULTICHAR(ch, in.peek());
+            int multichar = MK_MULTICHAR(ch, peekChar ());
             
             if (std::isdigit (ch))
                 return readIntLiteral (ch);
@@ -95,7 +95,7 @@ namespace kind
                 return readIdOrKeyword (ch);
             else if ((foundMultiCharPunctuation = multiCharPunctuation.find(multichar)) != multiCharPunctuation.end())
             {
-                in.get();
+                nextChar ();
                 return Token(foundMultiCharPunctuation->second);
             }
             else if ((foundPunctuation = punctuation.find(ch)) != punctuation.end())
@@ -106,18 +106,17 @@ namespace kind
 
         Token Tokenizer::readIntLiteral (int firstChar)
         {
-            int read;
-            while (std::isdigit(read = in.get()))
+            while (std::isdigit(nextChar()))
                 ;
-            in.unget ();
+            prevChar ();
             return Token (Token::Type::T_INTLITERAL);
         }
         
         Token Tokenizer::readIdOrKeyword (int firstChar)
         {
-            while (isIdContinuation(in.get()))
+            while (isIdContinuation(nextChar()))
                 ;
-            in.unget ();
+            prevChar ();
             return Token (Token::Type::T_ID);
         }
     }

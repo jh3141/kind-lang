@@ -27,6 +27,9 @@ namespace kind
                 return std::isalnum (ch) || ch == '_' || ch == '$';
             }
             Token readIdOrKeyword(int firstChar);
+            int nextChar () { return in.get (); }
+            int peekChar () { return in.peek (); }
+            void prevChar () { in.unget (); }
         };
         
         void printVersion (std::ostream & out);
