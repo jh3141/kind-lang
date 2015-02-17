@@ -123,3 +123,12 @@ TEST_CASE("Various double-character punctuation identified", "[tokenizer]")
 	REQUIRE(sut.nextToken().tokenType() == Token::Type::T_NEQ);
     REQUIRE(sut.nextToken().tokenType() == Token::Type::T_EOF);       
 }
+
+TEST_CASE("Single character ids recognised and terminated by whitespace", "[tokenizer]")
+{
+    decl_sut ("i j k");
+    REQUIRE(sut.nextToken().tokenType() == Token::Type::T_ID);
+    REQUIRE(sut.nextToken().tokenType() == Token::Type::T_ID);
+    REQUIRE(sut.nextToken().tokenType() == Token::Type::T_ID);
+    REQUIRE(sut.nextToken().tokenType() == Token::Type::T_EOF);    
+}

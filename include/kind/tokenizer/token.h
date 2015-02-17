@@ -57,8 +57,8 @@ namespace kind
         		T_GTE,
         		T_LSH,
         		T_RSH,
-        		T_NEQ
-        		
+        		T_NEQ,
+        		T_ID
             };
             
         private:

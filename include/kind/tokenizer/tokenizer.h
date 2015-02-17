@@ -1,5 +1,6 @@
 #include <iostream>
 #include <deque>
+#include <cctype>
 
 #include "kind/tokenizer/token.h"
 
@@ -19,6 +20,13 @@ namespace kind
             bool isWhitespace(int ch) { 
                 return ch <= ' ' && (ch == ' ' || ch == '\t' || ch == '\r' || ch == '\n');
             }
+            bool isIdStart (int ch) {
+                return std::isalpha (ch) || ch == '_' || ch == '$';
+            }
+            bool isIdContinuation (int ch) {
+                return std::isalnum (ch) || ch == '_' || ch == '$';
+            }
+            Token readIdOrKeyword(int firstChar);
         };
         
         void printVersion (std::ostream & out);
