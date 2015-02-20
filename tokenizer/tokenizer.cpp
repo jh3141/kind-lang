@@ -106,10 +106,15 @@ namespace kind
 
         Token Tokenizer::readIntLiteral (int firstChar, FilePosition start)
         {
-            while (std::isdigit(nextChar()))
-                ;
+            std::string literal (1, (char) firstChar);
+            
+            char next;
+            while (std::isdigit(next = nextChar()))
+                literal += next;
+                
             prevChar ();
-            return Token (Token::Type::T_INTLITERAL, start, current);
+            
+            return Token (Token::Type::T_INTLITERAL, start, current, literal);
         }
         
         Token Tokenizer::readIdOrKeyword (int firstChar, FilePosition start)

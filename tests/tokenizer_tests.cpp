@@ -180,3 +180,9 @@ TEST_CASE("Identifiers know their text representation", "[tokenizer]")
 	REQUIRE(sut.nextToken().text() == "first");
 	REQUIRE(sut.nextToken().text() == "line");
 }
+
+TEST_CASE("Int literals know their text representation", "[tokenizer]")
+{
+	decl_sut ("12345\n");
+	REQUIRE(sut.nextToken().text() == "12345");
+}
