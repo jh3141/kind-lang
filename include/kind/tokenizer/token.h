@@ -1,7 +1,7 @@
 #ifndef _KIND_TOKENIZER_TOKEN
 #define _KIND_TOKENIZER_TOKEN
 
-
+#include <string>
 #include "kind/tokenizer/fileposition.h"
 
 namespace kind
@@ -70,16 +70,22 @@ namespace kind
         private:
             Type type;
             FilePosition start, end;
+            std::string textVal;
             
         public:
             Token (Type type, FilePosition start, FilePosition end)
-                : type(type), start(start), end(end)
+                : type(type), start(start), end(end), textVal(/*empty*/)
+            {
+            }
+            Token (Type type, FilePosition start, FilePosition end, std::string textVal)
+                : type(type), start(start), end(end), textVal(textVal)
             {
             }
             
             Type tokenType() { return type; }
             FilePosition startPos () { return start; }
             FilePosition endPos () { return end; }
+            std::string & text () { return textVal; }
         };
         
     }

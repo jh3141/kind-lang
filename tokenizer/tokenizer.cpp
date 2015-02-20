@@ -114,10 +114,15 @@ namespace kind
         
         Token Tokenizer::readIdOrKeyword (int firstChar, FilePosition start)
         {
-            while (isIdContinuation(nextChar()))
-                ;
+            std::string id (1, (char) firstChar);
+            
+            char next;
+            while (isIdContinuation(next = nextChar()))
+                id += next;
+            
             prevChar ();
-            return Token (Token::Type::T_ID, start, current);
+            
+            return Token (Token::Type::T_ID, start, current, id);
         }
     }
 }

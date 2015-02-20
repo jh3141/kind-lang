@@ -173,3 +173,10 @@ TEST_CASE("Location tracking works for multiple lines", "[tokenizer]")
     REQUIRE (t.endPos().lineNumber() == 3);
     REQUIRE (t.endPos().columnNumber() == 8);   // n.b. inclusive range
 }
+
+TEST_CASE("Identifiers know their text representation", "[tokenizer]")
+{
+	decl_sut ("first line");	
+	REQUIRE(sut.nextToken().text() == "first");
+	REQUIRE(sut.nextToken().text() == "line");
+}
