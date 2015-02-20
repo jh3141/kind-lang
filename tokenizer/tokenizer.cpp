@@ -78,11 +78,11 @@ namespace kind
         Token Tokenizer::nextToken()
         {
             int ch = nextChar ();
-            
             while (isWhitespace(ch))
             {
                 ch = nextChar ();
             }
+            FilePosition start = current;
             
             std::map<char,Token::Type>::iterator foundPunctuation;
             std::map<int,Token::Type>::iterator foundMultiCharPunctuation;
@@ -90,34 +90,34 @@ namespace kind
             int multichar = MK_MULTICHAR(ch, peekChar ());
             
             if (std::isdigit (ch))
-                return readIntLiteral (ch);
+                return readIntLiteral (ch, start);
             else if (isIdStart (ch))
-                return readIdOrKeyword (ch);
+                return readIdOrKeyword (ch, start);
             else if ((foundMultiCharPunctuation = multiCharPunctuation.find(multichar)) != multiCharPunctuation.end())
             {
                 nextChar ();
-                return Token(foundMultiCharPunctuation->second);
+                return Token(foundMultiCharPunctuation->second, start, current);
             }
             else if ((foundPunctuation = punctuation.find(ch)) != punctuation.end())
-                return Token(foundPunctuation->second);
+                return Token(foundPunctuation->second, start, current);
             else
-                return Token(Token::Type::T_EOF);
+                return Token(Token::Type::T_EOF, start, current);
         }
 
-        Token Tokenizer::readIntLiteral (int firstChar)
+        Token Tokenizer::readIntLiteral (int firstChar, FilePosition start)
         {
             while (std::isdigit(nextChar()))
                 ;
             prevChar ();
-            return Token (Token::Type::T_INTLITERAL);
+            return Token (Token::Type::T_INTLITERAL, start, current);
         }
         
-        Token Tokenizer::readIdOrKeyword (int firstChar)
+        Token Tokenizer::readIdOrKeyword (int firstChar, FilePosition start)
         {
             while (isIdContinuation(nextChar()))
                 ;
             prevChar ();
-            return Token (Token::Type::T_ID);
+            return Token (Token::Type::T_ID, start, current);
         }
     }
 }

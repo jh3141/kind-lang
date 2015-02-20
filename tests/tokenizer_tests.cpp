@@ -132,3 +132,44 @@ TEST_CASE("Single character ids recognised and terminated by whitespace", "[toke
     REQUIRE(sut.nextToken().tokenType() == Token::Type::T_ID);
     REQUIRE(sut.nextToken().tokenType() == Token::Type::T_EOF);    
 }
+
+TEST_CASE("Multi-character ids recognised and terminated by punctuation", "[tokenizer]")
+{
+	decl_sut("test,case.");
+    REQUIRE(sut.nextToken().tokenType() == Token::Type::T_ID);
+    REQUIRE(sut.nextToken().tokenType() == Token::Type::T_COMMA);
+    REQUIRE(sut.nextToken().tokenType() == Token::Type::T_ID);
+    REQUIRE(sut.nextToken().tokenType() == Token::Type::T_DOT);
+    REQUIRE(sut.nextToken().tokenType() == Token::Type::T_EOF);    
+}
+
+TEST_CASE("Tokens know their location in the input stream", "[tokenizer]")
+{
+    decl_sut ("first line");
+    Token t = sut.nextToken();
+    REQUIRE (t.startPos().lineNumber() == 1);
+    REQUIRE (t.startPos().columnNumber() == 1);
+    REQUIRE (t.endPos().lineNumber() == 1);
+    REQUIRE (t.endPos().columnNumber() == 5);   // n.b. inclusive range
+    t = sut.nextToken();
+    REQUIRE (t.startPos().lineNumber() == 1);
+    REQUIRE (t.startPos().columnNumber() == 7);
+    REQUIRE (t.endPos().lineNumber() == 1);
+    REQUIRE (t.endPos().columnNumber() == 10);   // n.b. inclusive range
+}
+
+TEST_CASE("Location tracking works for multiple lines", "[tokenizer]")
+{
+	decl_sut("first\nsecond\n   third");
+	sut.nextToken();	// skip first; we don't need to test that again
+    Token t = sut.nextToken();
+    REQUIRE (t.startPos().lineNumber() == 2);
+    REQUIRE (t.startPos().columnNumber() == 1);
+    REQUIRE (t.endPos().lineNumber() == 2);
+    REQUIRE (t.endPos().columnNumber() == 6);   // n.b. inclusive range
+    t = sut.nextToken();
+    REQUIRE (t.startPos().lineNumber() == 3);
+    REQUIRE (t.startPos().columnNumber() == 4);
+    REQUIRE (t.endPos().lineNumber() == 3);
+    REQUIRE (t.endPos().columnNumber() == 8);   // n.b. inclusive range
+}

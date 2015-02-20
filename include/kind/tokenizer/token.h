@@ -1,3 +1,9 @@
+#ifndef _KIND_TOKENIZER_TOKEN
+#define _KIND_TOKENIZER_TOKEN
+
+
+#include "kind/tokenizer/fileposition.h"
+
 namespace kind
 {
     namespace tokenizer
@@ -63,15 +69,20 @@ namespace kind
             
         private:
             Type type;
+            FilePosition start, end;
             
         public:
-            Token (Type type)
-                : type(type)
+            Token (Type type, FilePosition start, FilePosition end)
+                : type(type), start(start), end(end)
             {
             }
             
             Type tokenType() { return type; }
+            FilePosition startPos () { return start; }
+            FilePosition endPos () { return end; }
         };
         
     }
 }
+
+#endif
