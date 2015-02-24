@@ -8,4 +8,6 @@ bin/*
 !bin/README.md
 lib/*
 !lib/README.md
+*.stackdump
+core
 

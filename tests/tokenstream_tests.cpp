@@ -19,5 +19,18 @@ TEST_CASE("Token stream returns empty stream for empty string", "[tokenizer]")
 	decl_sut("");
 
 	REQUIRE(sut.begin() == sut.end ());
+	REQUIRE(!(sut.begin() < sut.end()));
+}
+
+TEST_CASE("Token stream returns single token", "[tokenizer]")
+{
+	decl_sut("1");
+
+	TokenStream::Iterator i = sut.begin();
+	REQUIRE(!(i == sut.end()));
+	REQUIRE(i < sut.end ());
+	REQUIRE(i->tokenType() == Token::T_INTLITERAL);
+	i ++;
+	REQUIRE(i == sut.end());
 }
 

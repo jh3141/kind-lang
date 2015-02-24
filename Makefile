@@ -1,5 +1,5 @@
 export TOP=$(PWD)
-export CXXFLAGS=-std=c++11 -O3 -I$(TOP)/include -Wno-multichar
+export CXXFLAGS=-std=c++11 -g -I$(TOP)/include -Wno-multichar
 export LDFLAGS=-L$(TOP)/lib
 export LIBS=-lkind-tokenizer
 SUBDIRS=tokenizer parser tests
@@ -8,7 +8,7 @@ SUBDIRS=tokenizer parser tests
 
 all: $(SUBDIRS) runtests
 
-.PHONY: $(SUBDIRS) runtests
+.PHONY: $(SUBDIRS) runtests showconf clean
 
 $(SUBDIRS):
 	$(MAKE) -C $@
@@ -19,3 +19,5 @@ runtests: $(SUBDIRS)
 showconf:
 	$(MAKE) -C tokenizer showconf
 	
+clean: 
+	rm -f bin/kind* lib/*.a */*.o */*.dep
