@@ -122,4 +122,8 @@
       </Completion>
     </Configuration>
   </Settings>
+  <VirtualDirectory Name="samples">
+    <File Name="docs/samples/dynamic-type-inference-sample1.k"/>
+    <File Name="docs/samples/type-specification-sample1.k"/>
+  </VirtualDirectory>
 </CodeLite_Project>
