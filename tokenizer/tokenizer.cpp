@@ -1,5 +1,6 @@
 #include "kind/tokenizer/tokenizer.h"
 #include <cctype>
+#include <cstdio>
 #include <map>
 
 #if defined(__GNUC__)
@@ -20,7 +21,6 @@ namespace kind
         {
             punctuation[','] = Token::Type::T_COMMA;
             punctuation['!'] = Token::Type::T_EXCL;
-            punctuation['"'] = Token::Type::T_QUOTE;
             punctuation['%'] = Token::Type::T_MOD;
             punctuation['^'] = Token::Type::T_XOR;
             punctuation['&'] = Token::Type::T_AND;
@@ -47,9 +47,6 @@ namespace kind
             multiCharPunctuation['^^'] = Token::Type::T_LXOR;
             multiCharPunctuation['&&'] = Token::Type::T_LAND;
             multiCharPunctuation['||'] = Token::Type::T_LOR;
-            multiCharPunctuation['//'] = Token::Type::T_COMMENT_EOL;
-            multiCharPunctuation['/*'] = Token::Type::T_COMMENT_BEGIN;
-            multiCharPunctuation['*/'] = Token::Type::T_COMMENT_END;
             multiCharPunctuation['::'] = Token::Type::T_SCOPE;
             multiCharPunctuation['+='] = Token::Type::T_PLUS_EQ;
             multiCharPunctuation['-='] = Token::Type::T_MINUS_EQ;
@@ -93,6 +90,8 @@ namespace kind
                 return readIntLiteral (ch, start);
             else if (isIdStart (ch))
                 return readIdOrKeyword (ch, start);
+			else if (ch == '"')
+				return readString (ch, start);
             else if ((foundMultiCharPunctuation = multiCharPunctuation.find(multichar)) != multiCharPunctuation.end())
             {
                 nextChar ();
@@ -129,5 +128,18 @@ namespace kind
             
             return Token (Token::Type::T_ID, start, current, id);
         }
+		
+		Token Tokenizer::readString (int firstChar, FilePosition start)
+		{
+            std::string content;
+			char next;
+			while ((next = nextChar()) != '\"')
+			{
+				if (next == EOF) return Token (Token::Type::T_UNTERMINATEDSTRING, start, current);
+				content += next;
+			}	
+			
+			return Token (Token::Type::T_STRINGLITERAL, start, current, content);
+		}
     }
 }

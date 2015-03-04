@@ -14,10 +14,11 @@ namespace kind
             enum Type
             {
                 T_EOF,
+        		T_ID,
                 T_INTLITERAL,
+				T_STRINGLITERAL,
                 T_COMMA,
             	T_EXCL,
-        		T_QUOTE,
         		T_MOD,
         		T_XOR,
         		T_AND,
@@ -44,9 +45,8 @@ namespace kind
         		T_LXOR,
         		T_LAND,
         		T_LOR,
+        		T_COMMENT,
         		T_COMMENT_EOL,
-        		T_COMMENT_BEGIN,
-        		T_COMMENT_END,
         		T_SCOPE,
         		T_PLUS_EQ,
         		T_MINUS_EQ,
@@ -64,7 +64,7 @@ namespace kind
         		T_LSH,
         		T_RSH,
         		T_NEQ,
-        		T_ID
+				T_UNTERMINATEDSTRING
             };
             
         private:

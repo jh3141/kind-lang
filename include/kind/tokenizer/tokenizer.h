@@ -32,6 +32,7 @@ namespace kind
                 return std::isalnum (ch) || ch == '_' || ch == '$';
             }
             Token readIdOrKeyword(int firstChar, FilePosition start);
+			Token readString (int firstChart, FilePosition start);
             int nextChar () { 
                 int ch = in.get (); 
                 current.advance(ch);

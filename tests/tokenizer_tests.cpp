@@ -63,11 +63,10 @@ TEST_CASE("Integer literal terminated by punctuation correctly", "[tokenizer]")
 
 TEST_CASE("Various single-character punctuation identified", "[tokenizer]")
 {
-    decl_sut(",!\"%^&|*()[]{}'~;/?:<>.=-+");
+    decl_sut(",!%^&|*()[]{}'~;/?:<>.=-+");
     
 	REQUIRE(sut.nextToken().tokenType() == Token::Type::T_COMMA);
 	REQUIRE(sut.nextToken().tokenType() == Token::Type::T_EXCL);
-	REQUIRE(sut.nextToken().tokenType() == Token::Type::T_QUOTE);
 	REQUIRE(sut.nextToken().tokenType() == Token::Type::T_MOD);
 	REQUIRE(sut.nextToken().tokenType() == Token::Type::T_XOR);
 	REQUIRE(sut.nextToken().tokenType() == Token::Type::T_AND);
@@ -96,14 +95,11 @@ TEST_CASE("Various single-character punctuation identified", "[tokenizer]")
 
 TEST_CASE("Various double-character punctuation identified", "[tokenizer]")
 {
-    decl_sut("^^ && || // /* */ :: += -= *= /= %= ^= &= |= -- ++ -> <= >= << >> !=");
+    decl_sut("^^ && || :: += -= *= /= %= ^= &= |= -- ++ -> <= >= << >> !=");
     
 	REQUIRE(sut.nextToken().tokenType() == Token::Type::T_LXOR);
 	REQUIRE(sut.nextToken().tokenType() == Token::Type::T_LAND);
 	REQUIRE(sut.nextToken().tokenType() == Token::Type::T_LOR);
-	REQUIRE(sut.nextToken().tokenType() == Token::Type::T_COMMENT_EOL);
-	REQUIRE(sut.nextToken().tokenType() == Token::Type::T_COMMENT_BEGIN);
-	REQUIRE(sut.nextToken().tokenType() == Token::Type::T_COMMENT_END);
 	REQUIRE(sut.nextToken().tokenType() == Token::Type::T_SCOPE);
 	REQUIRE(sut.nextToken().tokenType() == Token::Type::T_PLUS_EQ);
 	REQUIRE(sut.nextToken().tokenType() == Token::Type::T_MINUS_EQ);
@@ -185,4 +181,27 @@ TEST_CASE("Int literals know their text representation", "[tokenizer]")
 {
 	decl_sut ("12345\n");
 	REQUIRE(sut.nextToken().text() == "12345");
+}
+
+TEST_CASE("String literals recognized", "[tokenizer]")
+{
+	decl_sut("\"hello\"");
+	REQUIRE (sut.nextToken().tokenType() == Token::Type::T_STRINGLITERAL);
+}
+
+TEST_CASE("String literal terminated at appropriate point", "[tokenizer]")
+{
+	decl_sut("\"hello\",");
+	REQUIRE (sut.nextToken().tokenType() == Token::Type::T_STRINGLITERAL);
+	REQUIRE (sut.nextToken().tokenType() == Token::Type::T_COMMA);	
+}
+TEST_CASE("Unterminated string literal does not fail", "[tokenizer]")
+{
+	decl_sut("\"hello");
+	REQUIRE (sut.nextToken().tokenType() == Token::Type::T_UNTERMINATEDSTRING);
+}
+TEST_CASE("String literal knows content", "[tokenizer]")
+{
+	decl_sut("\"hello\"");
+	REQUIRE(sut.nextToken().text() == "hello");
 }
