@@ -34,3 +34,52 @@ TEST_CASE("Token stream returns single token", "[tokenizer]")
 	REQUIRE(i == sut.end());
 }
 
+TEST_CASE("Token stream returns multiple tokens", "[tokenizer]")
+{
+	decl_sut("1 2 3");
+	
+	TokenStream::Iterator i = sut.begin();
+	REQUIRE(!(i == sut.end()));
+	REQUIRE(i < sut.end ());
+	REQUIRE(i->tokenType() == Token::T_INTLITERAL);
+	i ++;
+	REQUIRE(i < sut.end ());
+	REQUIRE(i->tokenType() == Token::T_INTLITERAL);
+	i ++;
+	REQUIRE(i < sut.end ());
+	REQUIRE(i->tokenType() == Token::T_INTLITERAL);
+	i ++;
+	REQUIRE(i == sut.end());
+}
+
+TEST_CASE("Token stream can go back to previous tokens", "[tokenizer]")
+{
+	decl_sut("1,x");
+	
+	TokenStream::Iterator i = sut.begin();
+	REQUIRE(!(i == sut.end()));
+	REQUIRE(i < sut.end ());
+	REQUIRE(i->tokenType() == Token::T_INTLITERAL);
+	i ++;
+	REQUIRE(i < sut.end ());
+	REQUIRE(i->tokenType() == Token::T_COMMA);
+	i --;
+	REQUIRE(i < sut.end ());
+	REQUIRE(i->tokenType() == Token::T_INTLITERAL);
+}
+
+TEST_CASE("Can use prefix increment/decrement operators on token stream iterator", "[tokenizer]")
+{
+	decl_sut("1,x");
+	
+	TokenStream::Iterator i = sut.begin();
+	REQUIRE(!(i == sut.end()));
+	REQUIRE(i < sut.end ());
+	REQUIRE(i->tokenType() == Token::T_INTLITERAL);
+	++ i;
+	REQUIRE(i < sut.end ());
+	REQUIRE(i->tokenType() == Token::T_COMMA);
+	-- i;
+	REQUIRE(i < sut.end ());
+	REQUIRE(i->tokenType() == Token::T_INTLITERAL);	
+}

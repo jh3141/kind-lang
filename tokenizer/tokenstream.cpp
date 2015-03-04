@@ -48,6 +48,23 @@ namespace kind
 			return *this;
 		}
 		
+		TokenStream::Iterator & TokenStream::Iterator::operator ++()
+		{
+			position ++;
+			return *this;
+		}
+		
+		TokenStream::Iterator & TokenStream::Iterator::operator --(int dummy)
+		{
+			position --;
+			return *this;
+		}
+		
+		TokenStream::Iterator & TokenStream::Iterator::operator --()
+		{
+			position --;
+			return *this;
+		}
 	}
 
 }
