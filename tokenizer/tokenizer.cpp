@@ -92,6 +92,11 @@ namespace kind
                 return readIdOrKeyword (ch, start);
 			else if (ch == '"')
 				return readString (ch, start);
+			else if (multichar == '//')
+			{
+				skipEOL ();
+				return nextToken ();  // TODO ensure TRO works on this
+			}
             else if ((foundMultiCharPunctuation = multiCharPunctuation.find(multichar)) != multiCharPunctuation.end())
             {
                 nextChar ();
@@ -140,6 +145,13 @@ namespace kind
 			}	
 			
 			return Token (Token::Type::T_STRINGLITERAL, start, current, content);
+		}
+		
+		void Tokenizer::skipEOL()
+		{
+			char ch;
+			while ((ch = nextChar ()) != '\n')
+				if (ch == EOF) break;
 		}
     }
 }

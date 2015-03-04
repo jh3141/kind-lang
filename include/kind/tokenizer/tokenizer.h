@@ -33,6 +33,7 @@ namespace kind
             }
             Token readIdOrKeyword(int firstChar, FilePosition start);
 			Token readString (int firstChart, FilePosition start);
+			void skipEOL ();
             int nextChar () { 
                 int ch = in.get (); 
                 current.advance(ch);

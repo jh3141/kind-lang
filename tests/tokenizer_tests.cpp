@@ -205,3 +205,11 @@ TEST_CASE("String literal knows content", "[tokenizer]")
 	decl_sut("\"hello\"");
 	REQUIRE(sut.nextToken().text() == "hello");
 }
+// TODO: string literals with escape characters
+
+TEST_CASE("C++-style comments stripped", "[tokenizer]")
+{
+	decl_sut("1// this is a comment to be ignored\n2");
+	REQUIRE (sut.nextToken().tokenType() == Token::Type::T_INTLITERAL);
+	REQUIRE (sut.nextToken().tokenType() == Token::Type::T_INTLITERAL);
+}
