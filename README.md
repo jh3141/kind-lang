@@ -15,6 +15,13 @@ Kind is:
 	* Scoped resource lifetimes ("RAII")
 	* Multiple strategies for memory leak avoidance including object ownership tracking and garbage collection
 
+Notes on other features can be seen in these documents:
+
+* [Subtyping by type substitution](docs/design-notes/type-substitution.md)
+
+You can get more idea of the general flavour of the language by looking at samples written using my currently-planned
+syntax.  The sample directory is viewable [here](docs/samples/).
+
 Kind is a work in progress.  These notes describe the current direction of the language, but are subject to change.
 No working prototype is yet available.
 
