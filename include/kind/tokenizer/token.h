@@ -45,8 +45,6 @@ namespace kind
         		T_LXOR,
         		T_LAND,
         		T_LOR,
-        		T_COMMENT,
-        		T_COMMENT_EOL,
         		T_SCOPE,
         		T_PLUS_EQ,
         		T_MINUS_EQ,
