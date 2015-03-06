@@ -2,6 +2,7 @@
 #include <cctype>
 #include <cstdio>
 #include <map>
+#include <string>
 
 #if defined(__GNUC__)
 // FIXME clang defines __GNUC__ but does it use the same multichar literal representation?
@@ -16,6 +17,7 @@ namespace kind
     {
         static std::map<char,Token::Type> punctuation;
         static std::map<int,Token::Type> multiCharPunctuation;
+		static std::map<std::string,Token::Type> keywords;
         static bool punctuationInitialized = false;
         static void initPunctuation ()
         {
@@ -64,6 +66,14 @@ namespace kind
             multiCharPunctuation['<<'] = Token::Type::T_LSH;
             multiCharPunctuation['>>'] = Token::Type::T_RSH;
             multiCharPunctuation['!='] = Token::Type::T_NEQ;
+			keywords["import"] = Token::Type::T_IMPORT;
+			keywords["var"] = Token::Type::T_VAR;
+			keywords["class"] = Token::Type::T_CLASS;
+			keywords["private"] = Token::Type::T_PRIVATE;
+			keywords["return"] = Token::Type::T_RETURN;
+			keywords["new"] = Token::Type::T_NEW;
+			keywords["while"] = Token::Type::T_WHILE;
+			keywords["if"] = Token::Type::T_IF;
         }
         
         Tokenizer::Tokenizer(std::istream & in)
@@ -131,6 +141,10 @@ namespace kind
             
             prevChar ();
             
+			std::map<std::string,Token::Type>::iterator foundKeyword;
+			if ((foundKeyword = keywords.find(id)) != keywords.end())
+				return Token(foundKeyword->second, start, current);
+			
             return Token (Token::Type::T_ID, start, current, id);
         }
 		

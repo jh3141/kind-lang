@@ -1,6 +1,6 @@
 import kind::Optional // Optional is a type that may or may not contain a value
 
-[exists T]	// declares a type variable T by asserting that the type exists.
+[var T]	// declares a type variable T
 class LinkedList
 {
 	private class Entry

@@ -62,6 +62,14 @@ namespace kind
         		T_LSH,
         		T_RSH,
         		T_NEQ,
+				T_IMPORT,
+				T_VAR,
+				T_CLASS,
+				T_PRIVATE,
+				T_RETURN,
+				T_NEW,
+				T_WHILE,
+				T_IF,
 				T_UNTERMINATEDSTRING
             };
             

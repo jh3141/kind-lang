@@ -213,3 +213,16 @@ TEST_CASE("C++-style comments stripped", "[tokenizer]")
 	REQUIRE (sut.nextToken().tokenType() == Token::Type::T_INTLITERAL);
 	REQUIRE (sut.nextToken().tokenType() == Token::Type::T_INTLITERAL);
 }
+
+TEST_CASE("Keywords recognized", "[tokenizer]")
+{
+	decl_sut("import var class private return new while if");
+	REQUIRE (sut.nextToken().tokenType() == Token::Type::T_IMPORT);
+	REQUIRE (sut.nextToken().tokenType() == Token::Type::T_VAR);
+	REQUIRE (sut.nextToken().tokenType() == Token::Type::T_CLASS);
+	REQUIRE (sut.nextToken().tokenType() == Token::Type::T_PRIVATE);
+	REQUIRE (sut.nextToken().tokenType() == Token::Type::T_RETURN);
+	REQUIRE (sut.nextToken().tokenType() == Token::Type::T_NEW);
+	REQUIRE (sut.nextToken().tokenType() == Token::Type::T_WHILE);
+	REQUIRE (sut.nextToken().tokenType() == Token::Type::T_IF);
+}
