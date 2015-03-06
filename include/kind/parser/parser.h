@@ -16,10 +16,16 @@ namespace kind
 		class Parser
 		{
 		private:
+			TokenStream & tokens;
+			std::unique_ptr<ParseTree> result;
+			
 		public:
 			Parser (TokenStream & tokens);
 			
 			std::unique_ptr<ParseTree> parse ();
+			
+		protected:
+			void parseImport (TokenStream::Iterator& current, TokenStream::Iterator end);
 		};
 	}
 }

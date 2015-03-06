@@ -24,3 +24,14 @@ TEST_CASE("Parsing empty string produces empty parse tree", "[parser]")
 	std::unique_ptr<ParseTree> pt = sut.parse ();
 	REQUIRE (pt->elementCount() == 0);
 }
+
+TEST_CASE("Can parse import declaration", "[parser]")
+{
+	decl_sut("import id1::id2;");
+	std::unique_ptr<ParseTree> pt = sut.parse ();
+	REQUIRE (pt->elementCount() == 1);
+	REQUIRE (pt->imports().size() == 1);
+	REQUIRE (pt->imports()[0].path().size() == 2);
+	REQUIRE (pt->imports()[0].path()[0] == "id1");
+	REQUIRE (pt->imports()[0].path()[1] == "id2");
+}

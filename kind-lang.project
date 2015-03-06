@@ -21,13 +21,13 @@
     <File Name="include/kind/tokenizer/fileposition.h"/>
     <File Name="include/kind/tokenizer/token.h"/>
     <File Name="include/kind/tokenizer/tokenizer.h"/>
-    <File Name="include/kind/tokenizer/tokenstream.h"/>
     <File Name="include/kind/parser/parser.h"/>
-    <File Name="include/kind/parser/ParseTree.h"/>
+    <File Name="include/kind/parser/parsetree.h"/>
+    <File Name="include/kind/tokenizer/tokenstream.h"/>
   </VirtualDirectory>
   <VirtualDirectory Name="parser">
     <File Name="parser/parser.cpp"/>
-    <File Name="parser/ParseTree.cpp"/>
+    <File Name="parser/parsetree.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="tests">
     <File Name="tests/main.cpp"/>

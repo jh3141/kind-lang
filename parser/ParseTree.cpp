@@ -1,4 +1,4 @@
-#include "kind/parser/ParseTree.h"
+#include "kind/parser/parsetree.h"
 
 namespace kind
 {

@@ -1,4 +1,4 @@
-import kind::Optional // Optional is a type that may or may not contain a value
+import kind::Optional; // Optional is a type that may or may not contain a value
 
 [var T]	// declares a type variable T
 class LinkedList
