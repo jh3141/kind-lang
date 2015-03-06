@@ -1,7 +1,7 @@
 export TOP=$(PWD)
 export CXXFLAGS=-std=c++11 -g -I$(TOP)/include -Wno-multichar
 export LDFLAGS=-L$(TOP)/lib
-export LIBS=-lkind-tokenizer
+export LIBS=-lkind-parser -lkind-tokenizer
 SUBDIRS=tokenizer parser tests
 
 # rules for the top level makefile here
