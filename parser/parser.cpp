@@ -25,14 +25,29 @@ namespace kind
 			return std::move(result);
 		}
 		
+		/*
+		 * Parse import declaration:
+		 *
+		 * import-decl            ::= "import" scoped-id opt-wildcard-indicator ";"
+		 * scoped-id              ::= id opt-scope-spec
+		 * opt-scope-spec         ::= 
+		 *                          | "::" id opt-scope-spec
+		 * opt-wildcard-indicator ::= 
+		 *                          | "::" "*"
+		 */
 		void Parser::parseImport(TokenStream::Iterator & current, TokenStream::Iterator end)
 		{
-			Symbol symbol;
+			Import symbol;
 			do
 			{
 				current ++;
 				// FIXME what if we reach EOF here?
-				// FIXME what if token type is wrong? current->tokenType() != Token::Type::T_ID
+				// FIXME what if token type is wrong? current->tokenType() != Token::Type::T_ID/Token::Type::T_STAR
+				if (current->tokenType() == Token::Type::T_STAR) {
+					symbol.wildcard = true;
+					current ++;
+					break;
+				}
 				symbol.path().push_back(current->text());
 				current++;
 				// FIXME what if we reach EOF here?

@@ -17,15 +17,24 @@ namespace kind
 			std::vector<std::string> & path () { return idPath; }
 		};
 		
+		class Import : public Symbol
+		{
+			friend class Parser;	// Parser is allowed to change wildcard status
+		private:
+			bool wildcard;
+		public:
+			bool isWildcard () { return wildcard; }
+		};
+		
 		class ParseTree
 		{
 		private:
-			std::vector<Symbol> imports_;
+			std::vector<Import> imports_;
 			
 		public:
 			ParseTree();
 			int elementCount () { return imports_.size(); }
-			std::vector<Symbol> & imports () { return imports_; }
+			std::vector<Import> & imports () { return imports_; }
 		};
 
 	}
