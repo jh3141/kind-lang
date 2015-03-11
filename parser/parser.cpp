@@ -42,13 +42,16 @@ namespace kind
 			{
 				current ++;
 				// FIXME what if we reach EOF here?
-				if (current->tokenType() == Token::Type::T_STAR) {
+				switch (current->tokenType())
+				{
+				case Token::Type::T_STAR:
 					// FIXME this isn't allowed at the beginning
 					symbol.wildcard = true;
 					current ++;
+					goto finished;
+				case Token::Type::T_ID:
 					break;
-				}
-				if (current->tokenType() != Token::Type::T_ID) {
+				default:
 					errorHandler.error(Error(
 						filename, current->startPos(), Error::ErrorCode::E_UNEXPECTEDTOKEN,
 						current->typeName(), 
@@ -60,6 +63,7 @@ namespace kind
 				// FIXME what if we reach EOF here?
 			}
 			while (current->tokenType() == Token::Type::T_SCOPE);
+		finished:
 			// FIXME what if we are not on a semicolon here?
 			current ++;
 			
