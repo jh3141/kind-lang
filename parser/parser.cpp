@@ -40,13 +40,8 @@ namespace kind
 			Import symbol;
 			do
 			{
-				current ++;
-				if (current == end) 
-				{
-					errorHandler.error(Error(
-						filename, current->startPos(), Error::ErrorCode::E_UNEXPECTEDEOF));
-					return;
-				}
+				if (!advanceAndTestEOF(current, end)) return;
+				
 				switch (current->tokenType())
 				{
 				case Token::Type::T_STAR:
@@ -64,13 +59,8 @@ namespace kind
 						));
 				}
 				symbol.path().push_back(current->text());
-				current++;
-				if (current == end) 
-				{
-					errorHandler.error(Error(
-						filename, current->startPos(), Error::ErrorCode::E_UNEXPECTEDEOF));
-					return;
-				}
+				
+				if (!advanceAndTestEOF(current, end)) return;
 			}
 			while (current->tokenType() == Token::Type::T_SCOPE);
 		finished:
@@ -80,5 +70,16 @@ namespace kind
 			result->imports().push_back(symbol);
 		}
 		
+		bool Parser::advanceAndTestEOF(TokenStream::Iterator & i, TokenStream::Iterator end)
+		{
+			i++;
+			if (i == end) 
+			{
+				errorHandler.error(Error(
+					filename, i->startPos(), Error::ErrorCode::E_UNEXPECTEDEOF));
+				return false;
+			}			
+			return true;
+		}
 	}
 }
