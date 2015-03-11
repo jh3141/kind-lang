@@ -20,8 +20,8 @@ namespace kind
             {
             }
             
-            int lineNumber() { return row; }
-            int columnNumber() { return column; }
+            int lineNumber() const { return row; }
+            int columnNumber() const { return column; }
             void advance (int ch)
             {
                 lastRow = row;

@@ -92,6 +92,7 @@ namespace kind
             FilePosition startPos () { return start; }
             FilePosition endPos () { return end; }
             std::string & text () { return textVal; }
+            std::string typeName ();
         };
         
     }

@@ -1,11 +1,13 @@
 #ifndef _KIND_PARSER_PARSER
 #define _KIND_PARSER_PARSER
 
+#include <string>
 #include <memory>
 
 #include "kind/tokenizer/tokenstream.h"
 #include "kind/tokenizer/token.h"
 #include "kind/parser/parsetree.h"
+#include "kind/parser/errorhandler.h"
 
 using namespace kind::tokenizer;
 
@@ -16,11 +18,13 @@ namespace kind
 		class Parser
 		{
 		private:
+			std::string filename;
 			TokenStream & tokens;
+			ErrorHandler & errorHandler;
 			std::unique_ptr<ParseTree> result;
 			
 		public:
-			Parser (TokenStream & tokens);
+			Parser (std::string filename, TokenStream & tokens, ErrorHandler & errorHandler);
 			
 			std::unique_ptr<ParseTree> parse ();
 			

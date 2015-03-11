@@ -6,8 +6,8 @@ namespace kind
 	{
 		using namespace kind::tokenizer;
 		
-		Parser::Parser(TokenStream & tokens) : 
-			tokens(tokens), result(new ParseTree)
+		Parser::Parser(std::string filename, TokenStream & tokens, ErrorHandler & errorHandler) : 
+			filename(filename), tokens(tokens), errorHandler(errorHandler), result(new ParseTree)
 		{
 			
 		}
@@ -42,11 +42,18 @@ namespace kind
 			{
 				current ++;
 				// FIXME what if we reach EOF here?
-				// FIXME what if token type is wrong? current->tokenType() != Token::Type::T_ID/Token::Type::T_STAR
 				if (current->tokenType() == Token::Type::T_STAR) {
+					// FIXME this isn't allowed at the beginning
 					symbol.wildcard = true;
 					current ++;
 					break;
+				}
+				if (current->tokenType() != Token::Type::T_ID) {
+					errorHandler.error(Error(
+						filename, current->startPos(), Error::ErrorCode::E_UNEXPECTEDTOKEN,
+						current->typeName(), 
+						"identifier"	// FIXME "identifier or *" for second & subsequent parts
+						));
 				}
 				symbol.path().push_back(current->text());
 				current++;
