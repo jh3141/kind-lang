@@ -83,3 +83,12 @@ TEST_CASE("Can use prefix increment/decrement operators on token stream iterator
 	REQUIRE(i < sut.end ());
 	REQUIRE(i->tokenType() == Token::T_INTLITERAL);	
 }
+
+TEST_CASE("Iterator at end of token stream returns EOF token", "[tokenizer]")
+{
+	decl_sut("a");
+	TokenStream::Iterator i = sut.begin();
+	i ++;
+	REQUIRE(i == sut.end());
+	REQUIRE(i->tokenType() == Token::T_EOF);
+}

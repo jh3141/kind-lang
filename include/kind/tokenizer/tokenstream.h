@@ -15,6 +15,7 @@ namespace kind
 			Tokenizer & tokenizer;
 			std::deque<Token> tokens;
 			bool finished;
+			Token eofToken;
 			
 		public:
 			class Iterator
@@ -43,7 +44,8 @@ namespace kind
 						
 			TokenStream (Tokenizer & tokenizer) : 
 				tokenizer (tokenizer),
-				finished(false)
+				finished(false),
+				eofToken(Token::T_EOF, FilePosition(), FilePosition())
 			{
 			}
 			

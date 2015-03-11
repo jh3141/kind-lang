@@ -61,7 +61,7 @@ TEST_CASE("Can parse whole-namespace import", "[parser]")
 	REQUIRE (pt->imports()[0].isWildcard ());
 }
 
-TEST_CASE("Error if import not followed by id", "[parser]")
+TEST_CASE("Error if import not followed by id", "[parser][errors]")
 {
 	decl_sut("import 2;");
 	sut.parse ();
@@ -74,4 +74,12 @@ TEST_CASE("Error if import not followed by id", "[parser]")
 	REQUIRE (error.code == Error::ErrorCode::E_UNEXPECTEDTOKEN);
 	REQUIRE (error.firstParameter == "integer literal");
 	REQUIRE (error.secondParameter == "identifier");
+}
+TEST_CASE ("Error if EOF after import", "[parser][errors]")
+{
+	decl_sut("import");
+	sut.parse ();
+	REQUIRE (errors.getErrors().size() == 1);
+	Error error = errors.getErrors()[0];
+	REQUIRE (error.code == Error::ErrorCode::E_UNEXPECTEDEOF);
 }

@@ -6,16 +6,19 @@ namespace kind
 	{
 		Token * TokenStream::tokenPtrAt (int index)
 		{
+			// FIXME this doesn't work if a token is skipped without reading it!
 			if (index >= tokens.size() && !finished) grow ();
 			if (index < tokens.size()) return &tokens[index];
-			return nullptr;
-				
+			return &eofToken;
 		}
 		void TokenStream::grow ()
 		{			
 			Token t = tokenizer.nextToken();
 			if (t.tokenType() == Token::T_EOF)
+			{
 				finished = true;
+				eofToken = t;
+			}
 			else
 				tokens.push_back(t);
 		}
@@ -23,7 +26,7 @@ namespace kind
 		
 		bool TokenStream::Iterator::operator ==(Iterator other) const
 		{
-			if (getCurrent())
+			if (getCurrent()->tokenType() != Token::T_EOF)
 				return position == other.position;
 			else
 				return other.position >= position;
@@ -31,7 +34,7 @@ namespace kind
 		
 		bool TokenStream::Iterator::operator < (Iterator other) const
 		{
-			if (getCurrent())
+			if (getCurrent()->tokenType() != Token::T_EOF)
 				return position < other.position;
 			else
 				return false;

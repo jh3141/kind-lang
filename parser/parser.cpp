@@ -41,7 +41,12 @@ namespace kind
 			do
 			{
 				current ++;
-				// FIXME what if we reach EOF here?
+				if (current == end) 
+				{
+					errorHandler.error(Error(
+						filename, current->startPos(), Error::ErrorCode::E_UNEXPECTEDEOF));
+					return;
+				}
 				switch (current->tokenType())
 				{
 				case Token::Type::T_STAR:

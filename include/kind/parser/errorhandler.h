@@ -16,7 +16,8 @@ namespace kind
         public:
             enum ErrorCode
             {
-                E_UNEXPECTEDTOKEN,             // unexpected %1 (expecting %2)
+                E_UNEXPECTEDTOKEN,              // unexpected %1 (expecting %2)
+                E_UNEXPECTEDEOF,                // unexpected EOF
                 E_MAX
             };
             
