@@ -83,3 +83,11 @@ TEST_CASE ("Error if EOF after import", "[parser][errors]")
 	Error error = errors.getErrors()[0];
 	REQUIRE (error.code == Error::ErrorCode::E_UNEXPECTEDEOF);
 }
+TEST_CASE ("Error if EOF after import id", "[parser][errors]")
+{
+	decl_sut ("import a");
+	sut.parse ();
+	REQUIRE (errors.getErrors().size() == 1);
+	Error error = errors.getErrors()[0];
+	REQUIRE (error.code == Error::ErrorCode::E_UNEXPECTEDEOF);
+}

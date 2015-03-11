@@ -65,7 +65,12 @@ namespace kind
 				}
 				symbol.path().push_back(current->text());
 				current++;
-				// FIXME what if we reach EOF here?
+				if (current == end) 
+				{
+					errorHandler.error(Error(
+						filename, current->startPos(), Error::ErrorCode::E_UNEXPECTEDEOF));
+					return;
+				}
 			}
 			while (current->tokenType() == Token::Type::T_SCOPE);
 		finished:
