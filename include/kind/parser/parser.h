@@ -29,6 +29,7 @@ namespace kind
 			std::unique_ptr<ParseTree> parse ();
 			
 		protected:
+			void unexpectedTokenError (TokenStream::Iterator token, std::string expected);
 			void parseImport (TokenStream::Iterator& current, TokenStream::Iterator end);
 			bool advanceAndTestEOF (TokenStream::Iterator& i, TokenStream::Iterator end);
 			void skipToSyncPoint (TokenStream::Iterator & i, TokenStream::Iterator end);

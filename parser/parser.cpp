@@ -22,10 +22,7 @@ namespace kind
 					parseImport (current, end);
 				else
 				{
-					errorHandler.error(Error(
-						filename, current->startPos(), Error::E_UNEXPECTEDTOKEN,
-						current->typeName(), 
-						"start of top level declaration"));
+					unexpectedTokenError (current, "start of top level declaration");
 					skipToSyncPoint (current, end);
 				}
 			}
@@ -64,11 +61,8 @@ namespace kind
 				case Token::Type::T_ID:
 					break;
 				default:
-					errorHandler.error(Error(
-						filename, current->startPos(), Error::ErrorCode::E_UNEXPECTEDTOKEN,
-						current->typeName(), 
-						symbol.path().size() > 0 ? "identifier or '*'" : "identifier"	
-						));
+					unexpectedTokenError (current,
+						symbol.path().size() > 0 ? "identifier or '*'" : "identifier");
 				}
 				symbol.path().push_back(current->text());
 				
@@ -77,18 +71,10 @@ namespace kind
 			while (current->tokenType() == Token::Type::T_SCOPE);
 		finished:
 			if (current->tokenType() != Token::T_SEMI)
-			{
-				errorHandler.error(Error(
-					filename, current->startPos(), Error::ErrorCode::E_UNEXPECTEDTOKEN,
-					current->typeName(), 
-					"semicolon or '::'"
-					));
-			}
+				unexpectedTokenError (current,  "semicolon or '::'");
 			else
-			{
 				current ++;
-			}
-			
+
 			result->imports().push_back(symbol);
 		}
 		
@@ -108,6 +94,14 @@ namespace kind
 		{
 			while (i < end && i->tokenType() != Token::T_SEMI) i++;
 			i ++;	// skip over sync point
+		}
+		
+		void Parser::unexpectedTokenError (TokenStream::Iterator actual, std::string expected)
+		{
+			errorHandler.error(Error(
+				filename, actual->startPos(), Error::E_UNEXPECTEDTOKEN,
+				actual->typeName(),
+				expected));
 		}
 	}
 }
