@@ -31,6 +31,7 @@ namespace kind
 		protected:
 			void parseImport (TokenStream::Iterator& current, TokenStream::Iterator end);
 			bool advanceAndTestEOF (TokenStream::Iterator& i, TokenStream::Iterator end);
+			void skipToSyncPoint (TokenStream::Iterator & i, TokenStream::Iterator end);
 		};
 	}
 }

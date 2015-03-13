@@ -20,7 +20,14 @@ namespace kind
 			{
 				if (current->tokenType() == Token::Type::T_IMPORT)
 					parseImport (current, end);
-					
+				else
+				{
+					errorHandler.error(Error(
+						filename, current->startPos(), Error::E_UNEXPECTEDTOKEN,
+						current->typeName(), 
+						"start of top level declaration"));
+					skipToSyncPoint (current, end);
+				}
 			}
 			return std::move(result);
 		}
@@ -45,9 +52,14 @@ namespace kind
 				switch (current->tokenType())
 				{
 				case Token::Type::T_STAR:
-					// FIXME this isn't allowed at the beginning
-					symbol.wildcard = true;
 					current ++;
+					if (symbol.path().size() == 0)
+					{
+						errorHandler.error(Error(filename, current->startPos(), Error::E_INVALIDWILDCARDIMPORT));
+						skipToSyncPoint (current, end);
+						return;
+					}
+					symbol.wildcard = true;
 					goto finished;
 				case Token::Type::T_ID:
 					break;
@@ -80,6 +92,12 @@ namespace kind
 				return false;
 			}			
 			return true;
+		}
+		
+		void Parser::skipToSyncPoint (TokenStream::Iterator & i, TokenStream::Iterator end)
+		{
+			while (i < end && i->tokenType() != Token::T_SEMI) i++;
+			i ++;	// skip over sync point
 		}
 	}
 }

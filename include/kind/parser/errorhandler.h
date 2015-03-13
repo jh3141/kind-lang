@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 #include "kind/tokenizer/fileposition.h"
+#include <iostream>
+#include <initializer_list>
 
 namespace kind
 {
@@ -18,6 +20,7 @@ namespace kind
             {
                 E_UNEXPECTEDTOKEN,              // unexpected %1 (expecting %2)
                 E_UNEXPECTEDEOF,                // unexpected EOF
+                E_INVALIDWILDCARDIMPORT,        // invalid wildcard import ('*' must have parent scope)
                 E_MAX
             };
             
@@ -49,6 +52,32 @@ namespace kind
         public:
             virtual void error (Error error) { errors.push_back(error); }
             std::vector<Error> getErrors() { return errors; }
+        };
+        
+        class DefaultErrorPrinter : public ErrorHandler
+        {
+        public:
+            virtual void error (Error error) { 
+                std::cout.flush ();
+                std::cerr << error.filename << ":" << error.position.lineNumber() << "," << error.position.columnNumber() << ": " << error.code << " " << error.firstParameter << " " << error.secondParameter << std::endl;
+                std::cerr.flush ();
+            }
+        };
+        
+        class ErrorHandlerMultiplexer : public ErrorHandler
+        {
+        private:
+            std::vector<ErrorHandler *> handlers;
+        public:
+            ErrorHandlerMultiplexer(std::initializer_list<ErrorHandler *> initializer)
+                : handlers(initializer)
+            {
+            }
+            virtual void error (Error error) 
+            {
+                for (ErrorHandler * handler : handlers)
+                    handler->error(error);
+            }
         };
     }
 }

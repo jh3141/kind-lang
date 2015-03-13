@@ -13,13 +13,17 @@ using namespace kind::tokenizer;
 using namespace kind::parser;
 using namespace std;
 
+extern bool kind_test_verbose;
+
 #define decl_sut(str) \
     string input = str; \
     stringstream inputStream (input); \
     Tokenizer tok (inputStream); \
 	TokenStream ts (tok); \
 	ErrorStorageHandler errors; \
-	Parser sut ("test.k", ts, errors)
+	DefaultErrorPrinter errorPrinter; \
+	ErrorHandlerMultiplexer errorMultiplexer { &errors, &errorPrinter }; \
+	Parser sut ("test.k", ts, kind_test_verbose ? (ErrorHandler&)errorMultiplexer : (ErrorHandler&)errors)
 	
 TEST_CASE("Parsing empty string produces empty parse tree", "[parser]")
 {
@@ -90,4 +94,19 @@ TEST_CASE ("Error if EOF after import id", "[parser][errors]")
 	REQUIRE (errors.getErrors().size() == 1);
 	Error error = errors.getErrors()[0];
 	REQUIRE (error.code == Error::ErrorCode::E_UNEXPECTEDEOF);
+}
+TEST_CASE ("Error on import *", "[parser][errors]")
+{
+	decl_sut ("import *");
+	sut.parse ();
+	REQUIRE (errors.getErrors().size() == 1);
+	Error error = errors.getErrors()[0];
+	REQUIRE (error.code == Error::ErrorCode::E_INVALIDWILDCARDIMPORT);
+}
+TEST_CASE ("Resync after 'import *;'", "[parser][errors]")
+{
+	decl_sut ("import *; import id1::id2;");
+	std::unique_ptr<ParseTree> pt = sut.parse ();
+	REQUIRE (pt->elementCount() == 1);
+	REQUIRE (errors.getErrors().size() == 1);
 }
