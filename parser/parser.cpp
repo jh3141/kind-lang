@@ -67,7 +67,7 @@ namespace kind
 					errorHandler.error(Error(
 						filename, current->startPos(), Error::ErrorCode::E_UNEXPECTEDTOKEN,
 						current->typeName(), 
-						"identifier"	// FIXME "identifier or *" for second & subsequent parts
+						symbol.path().size() > 0 ? "identifier or '*'" : "identifier"	
 						));
 				}
 				symbol.path().push_back(current->text());
@@ -76,8 +76,18 @@ namespace kind
 			}
 			while (current->tokenType() == Token::Type::T_SCOPE);
 		finished:
-			// FIXME what if we are not on a semicolon here?
-			current ++;
+			if (current->tokenType() != Token::T_SEMI)
+			{
+				errorHandler.error(Error(
+					filename, current->startPos(), Error::ErrorCode::E_UNEXPECTEDTOKEN,
+					current->typeName(), 
+					"semicolon or '::'"
+					));
+			}
+			else
+			{
+				current ++;
+			}
 			
 			result->imports().push_back(symbol);
 		}

@@ -79,6 +79,17 @@ TEST_CASE("Error if import not followed by id", "[parser][errors]")
 	REQUIRE (error.firstParameter == "integer literal");
 	REQUIRE (error.secondParameter == "identifier");
 }
+TEST_CASE("Error if non-identifier in imported scoped identifier", "[parser][errors]")
+{
+	decl_sut("import a::2;");
+	sut.parse ();
+
+	REQUIRE (errors.getErrors().size() == 1);
+	Error error = errors.getErrors()[0];
+	REQUIRE (error.code == Error::ErrorCode::E_UNEXPECTEDTOKEN);
+	REQUIRE (error.firstParameter == "integer literal");
+	REQUIRE (error.secondParameter == "identifier or '*'");
+}
 TEST_CASE ("Error if EOF after import", "[parser][errors]")
 {
 	decl_sut("import");
@@ -109,4 +120,15 @@ TEST_CASE ("Resync after 'import *;'", "[parser][errors]")
 	std::unique_ptr<ParseTree> pt = sut.parse ();
 	REQUIRE (pt->elementCount() == 1);
 	REQUIRE (errors.getErrors().size() == 1);
+}
+TEST_CASE ("Error if no semicolon after import statement", "[parser][errors]")
+{
+	decl_sut ("import id1::id2\n"
+	          "import id3::id4;");
+	sut.parse ();
+	REQUIRE (errors.getErrors().size() == 1);
+	Error error = errors.getErrors()[0];
+	REQUIRE (error.code == Error::ErrorCode::E_UNEXPECTEDTOKEN);
+	REQUIRE (error.firstParameter == "'import'");
+	REQUIRE (error.secondParameter == "semicolon or '::'");
 }
