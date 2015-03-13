@@ -51,8 +51,7 @@ namespace kind
 				case Token::Type::T_STAR:
 					if (symbol.path().size() == 0)
 					{
-						errorHandler.error(Error(filename, current->startPos(), Error::E_INVALIDWILDCARDIMPORT));
-						skipToSyncPoint (current, end);
+						errorSync(current, end, Error::E_INVALIDWILDCARDIMPORT);
 						return;
 					}
 					symbol.wildcard = true;
@@ -60,8 +59,7 @@ namespace kind
 				case Token::Type::T_ID:
 					if (symbol.wildcard)
 					{
-						errorHandler.error(Error(filename, current->startPos(), Error::E_WILDCARDSCOPECHILD));
-						skipToSyncPoint (current, end);
+						errorSync(current, end, Error::E_WILDCARDSCOPECHILD);
 						return;
 					}
 					symbol.path().push_back(current->text());
@@ -88,8 +86,7 @@ namespace kind
 			i++;
 			if (i == end) 
 			{
-				errorHandler.error(Error(
-					filename, i->startPos(), Error::ErrorCode::E_UNEXPECTEDEOF));
+				errorSync (i, end, Error::ErrorCode::E_UNEXPECTEDEOF);
 				return false;
 			}			
 			return true;
@@ -107,6 +104,12 @@ namespace kind
 				filename, actual->startPos(), Error::E_UNEXPECTEDTOKEN,
 				actual->typeName(),
 				expected));
+		}
+		
+		void Parser::errorSync (TokenStream::Iterator & current, TokenStream::Iterator end, Error::ErrorCode code, std::string first, std::string second)
+		{
+			errorHandler.error(Error(filename, current->startPos(), code, first, second));
+			skipToSyncPoint (current, end);			
 		}
 	}
 }
