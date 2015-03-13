@@ -132,3 +132,11 @@ TEST_CASE ("Error if no semicolon after import statement", "[parser][errors]")
 	REQUIRE (error.firstParameter == "'import'");
 	REQUIRE (error.secondParameter == "semicolon or '::'");
 }
+TEST_CASE ("Error if wildcard in middle of scoped id", "[parser][errors]")
+{
+	decl_sut ("import id1::*::id2;");
+	sut.parse ();
+	REQUIRE (errors.getErrors().size() == 1);
+	Error error = errors.getErrors()[0];
+	REQUIRE (error.code == Error::ErrorCode::E_WILDCARDSCOPECHILD);
+}

@@ -21,6 +21,7 @@ namespace kind
                 E_UNEXPECTEDTOKEN,              // unexpected %1 (expecting %2)
                 E_UNEXPECTEDEOF,                // unexpected EOF
                 E_INVALIDWILDCARDIMPORT,        // invalid wildcard import ('*' must have parent scope)
+                E_WILDCARDSCOPECHILD,           // wildcard may only appear at end of imported scope specification
                 E_MAX
             };
             

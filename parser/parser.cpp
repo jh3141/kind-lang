@@ -58,6 +58,12 @@ namespace kind
 					symbol.wildcard = true;
 					break;
 				case Token::Type::T_ID:
+					if (symbol.wildcard)
+					{
+						errorHandler.error(Error(filename, current->startPos(), Error::E_WILDCARDSCOPECHILD));
+						skipToSyncPoint (current, end);
+						return;
+					}
 					symbol.path().push_back(current->text());
 					break;
 				default:

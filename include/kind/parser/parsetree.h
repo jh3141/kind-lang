@@ -23,6 +23,7 @@ namespace kind
 		private:
 			bool wildcard;
 		public:
+			Import() : wildcard(false) { }
 			bool isWildcard () { return wildcard; }
 		};
 		
