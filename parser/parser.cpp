@@ -49,7 +49,6 @@ namespace kind
 				switch (current->tokenType())
 				{
 				case Token::Type::T_STAR:
-					current ++;
 					if (symbol.path().size() == 0)
 					{
 						errorHandler.error(Error(filename, current->startPos(), Error::E_INVALIDWILDCARDIMPORT));
@@ -57,19 +56,19 @@ namespace kind
 						return;
 					}
 					symbol.wildcard = true;
-					goto finished;
+					break;
 				case Token::Type::T_ID:
+					symbol.path().push_back(current->text());
 					break;
 				default:
 					unexpectedTokenError (current,
 						symbol.path().size() > 0 ? "identifier or '*'" : "identifier");
 				}
-				symbol.path().push_back(current->text());
 				
 				if (!advanceAndTestEOF(current, end)) return;
 			}
 			while (current->tokenType() == Token::Type::T_SCOPE);
-		finished:
+		
 			if (current->tokenType() != Token::T_SEMI)
 				unexpectedTokenError (current,  "semicolon or '::'");
 			else
