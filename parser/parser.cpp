@@ -6,7 +6,8 @@ namespace kind
 	{
 		using namespace kind::tokenizer;
 		
-		Parser::Parser(std::string filename, TokenStream & tokens, ErrorHandler & errorHandler) : 
+		Parser::Parser(std::string filename, TokenStream & tokens, ErrorHandler & errorHandler) :
+			ParserUtil(filename, errorHandler),
 			filename(filename), tokens(tokens), errorHandler(errorHandler), result(new ParseTree)
 		{
 			
@@ -81,35 +82,5 @@ namespace kind
 			result->imports().push_back(symbol);
 		}
 		
-		bool Parser::advanceAndTestEOF(TokenStream::Iterator & i, TokenStream::Iterator end)
-		{
-			i++;
-			if (i == end) 
-			{
-				errorSync (i, end, Error::ErrorCode::E_UNEXPECTEDEOF);
-				return false;
-			}			
-			return true;
-		}
-		
-		void Parser::skipToSyncPoint (TokenStream::Iterator & i, TokenStream::Iterator end)
-		{
-			while (i < end && i->tokenType() != Token::T_SEMI) i++;
-			i ++;	// skip over sync point
-		}
-		
-		void Parser::unexpectedTokenError (TokenStream::Iterator actual, std::string expected)
-		{
-			errorHandler.error(Error(
-				filename, actual->startPos(), Error::E_UNEXPECTEDTOKEN,
-				actual->typeName(),
-				expected));
-		}
-		
-		void Parser::errorSync (TokenStream::Iterator & current, TokenStream::Iterator end, Error::ErrorCode code, std::string first, std::string second)
-		{
-			errorHandler.error(Error(filename, current->startPos(), code, first, second));
-			skipToSyncPoint (current, end);			
-		}
 	}
 }

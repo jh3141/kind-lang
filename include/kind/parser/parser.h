@@ -8,6 +8,7 @@
 #include "kind/tokenizer/token.h"
 #include "kind/parser/parsetree.h"
 #include "kind/parser/errorhandler.h"
+#include "kind/parser/parserutil.h"
 
 using namespace kind::tokenizer;
 
@@ -15,7 +16,7 @@ namespace kind
 {
 	namespace parser
 	{
-		class Parser
+		class Parser : ParserUtil
 		{
 		private:
 			std::string filename;
@@ -29,11 +30,8 @@ namespace kind
 			std::unique_ptr<ParseTree> parse ();
 			
 		protected:
-			void errorSync (TokenStream::Iterator& current, TokenStream::Iterator end, Error::ErrorCode, std::string first = "", std::string second = "");
-			void unexpectedTokenError (TokenStream::Iterator token, std::string expected);
 			void parseImport (TokenStream::Iterator& current, TokenStream::Iterator end);
-			bool advanceAndTestEOF (TokenStream::Iterator& i, TokenStream::Iterator end);
-			void skipToSyncPoint (TokenStream::Iterator & i, TokenStream::Iterator end);
+		
 		};
 	}
 }
