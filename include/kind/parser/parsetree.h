@@ -19,7 +19,7 @@ namespace kind
 		
 		class Import : public Symbol
 		{
-			friend class Parser;	// Parser is allowed to change wildcard status
+			friend class ImportParser;	// ImportParser is allowed to change wildcard status
 		private:
 			bool wildcard;
 		public:

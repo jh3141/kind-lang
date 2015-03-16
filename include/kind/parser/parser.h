@@ -29,9 +29,6 @@ namespace kind
 			
 			std::unique_ptr<ParseTree> parse ();
 			
-		protected:
-			void parseImport (TokenStream::Iterator& current, TokenStream::Iterator end);
-		
 		};
 	}
 }
