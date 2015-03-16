@@ -1,5 +1,6 @@
 #include "kind/parser/parser.h"
 #include "kind/parser/importparser.h"
+#include "kind/parser/functionparser.h"
 
 namespace kind
 {
@@ -20,15 +21,20 @@ namespace kind
 			auto end = tokens.end ();
 			
 			ImportParser importParser (filename, errorHandler, *result);
+			FunctionParser functionParser (filename, errorHandler, *result);
 			
 			while (current < end)
 			{
-				if (current->tokenType() == Token::Type::T_IMPORT)
+				switch (current->tokenType())
 				{
+				case Token::Type::T_IMPORT:
 					importParser.parse (current, end);
-				}
-				else
-				{
+					break;
+				case Token::Type::T_ID:
+					functionParser.parse (current, end);
+					break;
+					
+				default:
 					unexpectedTokenError (current, "start of top level declaration");
 					skipToSyncPoint (current, end);
 				}

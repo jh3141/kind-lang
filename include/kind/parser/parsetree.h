@@ -1,6 +1,7 @@
 #ifndef _KIND_PARSER_PARSETREE
 #define _KIND_PARSER_PARSETREE
 
+#include <memory>
 #include <vector>
 #include <string>
 
@@ -27,15 +28,20 @@ namespace kind
 			bool isWildcard () { return wildcard; }
 		};
 		
+		class Declaration
+		{
+		};
+		
 		class ParseTree
 		{
 		private:
 			std::vector<Import> imports_;
-			
+			std::vector<std::shared_ptr<Declaration>> declarations_;
 		public:
 			ParseTree();
 			int elementCount () { return imports_.size(); }
 			std::vector<Import> & imports () { return imports_; }
+			std::vector<std::shared_ptr<Declaration>> & declarations () { return declarations_; }
 		};
 
 	}
