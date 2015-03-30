@@ -3,24 +3,24 @@ class SimpleClass
 	var f;	// f has no type specified, so it will be inferred based on usage
 			// note that f is private, as all fields are private
 	
-	SimpleClass()	// constructor; defaults to public access
+	SimpleClass: 	// constructor; defaults to public access
 	{
 		f = 5;
 	}
 	
 	// public mutator for f:
-	setF(value)		// value has no type declared, so the type of f is detected
+	setF (value)		// value has no type declared, so the type of f is detected
 	{				// based on usage:
 		f = value;
 	}
 	
-	getF()
+	getF: 
 	{
 		return f;
 	}
 }
 
-main(args)			// main has known predefined type, so args is inferred as string[]
+main (args)			// main has known predefined type, so args is inferred as string[]
 {
 	SimpleClass sc1 = new SimpleClass;
 	sc1.setF(10);	// this is the last usage of sc1, so the compiler can determine
