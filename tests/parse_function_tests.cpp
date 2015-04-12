@@ -47,6 +47,12 @@ TEST_CASE("Empty function contains a lambda definition with an empty tuple argum
 	REQUIRE(lambda->patterns().size() == 1);
 	REQUIRE(lambda->patterns()[0]->matches(TupleType(0)));
 }
+TEST_CASE("Empty function does not cause error", "[parser][errors]")
+{
+	decl_sut("testFunction(){}");
+	sut.parse();
+	REQUIRE (errors.getErrors().size() == 0);	
+}
 TEST_CASE("Function with parameter does not match empty tuple argument", "[parser]")
 {
 	decl_sut("testFunction(a){}");
@@ -55,4 +61,34 @@ TEST_CASE("Function with parameter does not match empty tuple argument", "[parse
 	std::shared_ptr<LambdaExpression> lambda = result->declarations()[0]->lambda();
 	REQUIRE(lambda->patterns().size() == 1);
 	REQUIRE(! lambda->patterns()[0]->matches(TupleType(0)));
+}
+TEST_CASE("Function without bracket raises error", "[parser][errors]")
+{
+	decl_sut("testFunction 3 {}");
+	sut.parse();
+	REQUIRE (errors.getErrors().size() == 1);
+	Error error = errors.getErrors()[0];
+	REQUIRE (error.code == Error::ErrorCode::E_UNEXPECTEDTOKEN);
+	REQUIRE (error.firstParameter == "integer literal");
+	REQUIRE (error.secondParameter == "function parameter list");
+}
+TEST_CASE("Non-identifier in argument list raises error", "[parser][errors]")
+{
+	decl_sut("testFunction(+){}");
+	sut.parse();
+	REQUIRE (errors.getErrors().size() == 1);
+	Error error = errors.getErrors()[0];
+	REQUIRE (error.code == Error::ErrorCode::E_UNEXPECTEDTOKEN);
+	REQUIRE (error.firstParameter == "'+'");
+	REQUIRE (error.secondParameter == "identifier");
+}
+TEST_CASE("Multiple parameters separated by commas recognised", "[parser]")
+{
+	decl_sut("testFunction(a,b,c){}");
+	std::unique_ptr<ParseTree> result = sut.parse();	
+	REQUIRE (errors.getErrors().size() == 0);	
+	REQUIRE(result->declarations()[0]->type() == Declaration::DECL_TYPE_LAMBDA);
+	std::shared_ptr<LambdaExpression> lambda = result->declarations()[0]->lambda();
+	REQUIRE(lambda->patterns().size() == 1);
+	REQUIRE(lambda->patterns()[0]->matches(TupleType(3)));
 }

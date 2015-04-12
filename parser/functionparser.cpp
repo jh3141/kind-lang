@@ -11,16 +11,41 @@ namespace kind
         {
             std::unique_ptr<LambdaExpression> result (new LambdaExpression);
             
-            if (current->tokenType() == Token::T_LPAREN) current ++;
-            int tupleSize = 0;
-            while (current->tokenType() != Token::T_RPAREN) {
+            if (current->tokenType() == Token::T_LPAREN)    // start of parameter list
+            {
                 current ++;
-                tupleSize ++;
+                int tupleSize = 0;
+                while (current < end && current->tokenType() != Token::T_RPAREN) {
+                    if (current->tokenType() != Token::T_ID)
+                    {
+                        unexpectedTokenError (current, "identifier");
+                        current ++;
+                        continue;
+                    }
+                    else
+                    {
+                        current ++;
+                        tupleSize ++;
+                        switch (current->tokenType())
+                        {
+                            case Token::T_RPAREN: break;    // last entry in list
+                            case Token::T_COMMA: 
+                                current++;
+                                break;     // separator for next entry
+                            default:
+                                unexpectedTokenError (current, "comma or right parenthesis");
+                        }
+                    }
+                }
+                result->addCase(std::make_shared<GuardPattern>(TupleType(tupleSize)));
             }
-            result->addCase(std::make_shared<GuardPattern>(TupleType(tupleSize)));
-            
-			while (current < end && current->tokenType() != Token::T_RBRACE) current ++;
-			
+            else
+            {
+                unexpectedTokenError (current, "function parameter list");
+            }
+			while (current < end && current->tokenType() != Token::T_RBRACE) 
+			    current ++;
+			current ++; // skip close brace
 			return result;
         }
         
