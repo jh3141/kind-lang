@@ -32,3 +32,18 @@ TEST_CASE("Can parse empty function declaration", "[parser]")
 	
 	REQUIRE(result->declarations().size() == 1);
 }
+TEST_CASE("Function name is stored in declaration", "[parser]")
+{
+	decl_sut("testFunction(){}");
+	std::unique_ptr<ParseTree> result = sut.parse();	
+	REQUIRE(result->declarations()[0]->id() == "testFunction");
+}
+TEST_CASE("Empty function contains a lambda definition with an empty tuple argument", "[parser]")
+{
+	decl_sut("testFunction(){}");
+	std::unique_ptr<ParseTree> result = sut.parse();	
+	REQUIRE(result->declarations()[0]->type() == Declaration::DECL_TYPE_LAMBDA);
+	std::shared_ptr<LambdaExpression> lambda = result->declarations()[0]->lambda();
+	REQUIRE(lambda->patterns().size() == 1);
+	REQUIRE(lambda->patterns()[0].matches(Tuple(0)));
+}

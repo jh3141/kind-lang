@@ -12,13 +12,26 @@ namespace kind
     {
         using namespace kind::tokenizer;
         
+        class LambdaExpressionParser : ParserUtil
+        {
+        public:
+			LambdaExpressionParser (std::string filename, ErrorHandler & errorHandler) :
+				ParserUtil(filename, errorHandler)
+			{
+			}
+			
+			std::unique_ptr<LambdaExpression> parse (TokenStream::Iterator & current, TokenStream::Iterator end);
+        };
+        
 		class FunctionParser : ParserUtil
 		{
 		private:
 			ParseTree & result;
+			LambdaExpressionParser lambdaParser;
 		public:
 			FunctionParser (std::string filename, ErrorHandler & errorHandler, ParseTree & result) :
-				ParserUtil(filename, errorHandler), result(result)
+				ParserUtil(filename, errorHandler), result(result),
+				lambdaParser(filename, errorHandler)
 			{
 			}
 			
