@@ -10,7 +10,14 @@ namespace kind
             TokenStream::Iterator & current, TokenStream::Iterator end)
         {
             std::unique_ptr<LambdaExpression> result (new LambdaExpression);
-            result->addCase(GuardPattern());
+            
+            if (current->tokenType() == Token::T_LPAREN) current ++;
+            int tupleSize = 0;
+            while (current->tokenType() != Token::T_RPAREN) {
+                current ++;
+                tupleSize ++;
+            }
+            result->addCase(std::make_shared<GuardPattern>(TupleType(tupleSize)));
             
 			while (current < end && current->tokenType() != Token::T_RBRACE) current ++;
 			

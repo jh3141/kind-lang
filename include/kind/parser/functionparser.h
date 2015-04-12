@@ -12,11 +12,24 @@ namespace kind
     {
         using namespace kind::tokenizer;
         
-        class LambdaExpressionParser : ParserUtil
+        class GuardExpressionParser : ParserUtil
         {
         public:
-			LambdaExpressionParser (std::string filename, ErrorHandler & errorHandler) :
+			GuardExpressionParser (std::string filename, ErrorHandler & errorHandler) :
 				ParserUtil(filename, errorHandler)
+			{
+			}
+        	
+        };
+        
+        class LambdaExpressionParser : ParserUtil
+        {
+        private:
+        	GuardExpressionParser guardParser;
+        public:
+			LambdaExpressionParser (std::string filename, ErrorHandler & errorHandler) :
+				ParserUtil(filename, errorHandler),
+				guardParser(filename, errorHandler)
 			{
 			}
 			

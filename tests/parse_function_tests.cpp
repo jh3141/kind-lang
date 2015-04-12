@@ -45,5 +45,14 @@ TEST_CASE("Empty function contains a lambda definition with an empty tuple argum
 	REQUIRE(result->declarations()[0]->type() == Declaration::DECL_TYPE_LAMBDA);
 	std::shared_ptr<LambdaExpression> lambda = result->declarations()[0]->lambda();
 	REQUIRE(lambda->patterns().size() == 1);
-	REQUIRE(lambda->patterns()[0].matches(Tuple(0)));
+	REQUIRE(lambda->patterns()[0]->matches(TupleType(0)));
+}
+TEST_CASE("Function with parameter does not match empty tuple argument", "[parser]")
+{
+	decl_sut("testFunction(a){}");
+	std::unique_ptr<ParseTree> result = sut.parse();	
+	REQUIRE(result->declarations()[0]->type() == Declaration::DECL_TYPE_LAMBDA);
+	std::shared_ptr<LambdaExpression> lambda = result->declarations()[0]->lambda();
+	REQUIRE(lambda->patterns().size() == 1);
+	REQUIRE(! lambda->patterns()[0]->matches(TupleType(0)));
 }

@@ -4,12 +4,12 @@ namespace kind
 {
 	namespace parser
 	{
-		bool GuardPattern::matches (Tuple tuple)
+		bool GuardPattern::matches (TupleType tuple)
 		{
-			return true;
+			return tuple.size() == tuple_.size();
 		}
 		
-		void LambdaExpression::addCase (GuardPattern guard)
+		void LambdaExpression::addCase (std::shared_ptr<GuardPattern> guard)
 		{
 			patterns_.push_back(guard);
 		}

@@ -28,28 +28,32 @@ namespace kind
 			bool isWildcard () { return wildcard; }
 		};
 		
-		class Tuple
+		class TupleType
 		{
 		private:
 			int size_;
 		public:
-			Tuple(int size) : size_(size) {}
+			TupleType(int size) : size_(size) {}
 			int size() { return size_; }
 		};
 		
 		class GuardPattern
 		{
+		private:
+			TupleType tuple_;
 		public:
-			bool matches(Tuple argumentDescription);
+			GuardPattern() : tuple_(TupleType(0)) { }
+			GuardPattern(TupleType tupleType) : tuple_(tupleType) {}
+			bool matches(TupleType argumentDescription);
 		};
 		
 		class LambdaExpression
 		{
 		private:
-			std::vector<GuardPattern> patterns_;
+			std::vector<std::shared_ptr<GuardPattern>> patterns_;
 		public:
-			void addCase (GuardPattern guard);
-			std::vector<GuardPattern> & patterns() { return patterns_; }
+			void addCase (std::shared_ptr<GuardPattern> guard);
+			std::vector<std::shared_ptr<GuardPattern>> & patterns() { return patterns_; }
 		};
 		
 		class Declaration
