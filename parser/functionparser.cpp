@@ -33,11 +33,11 @@ namespace kind
                                 current++;
                                 break;     // separator for next entry
                             default:
-                                unexpectedTokenError (current, "comma or right parenthesis");
+                                unexpectedTokenError (current, "',' or ')'");
                         }
                     }
                 }
-                result->addCase(std::make_shared<GuardPattern>(TupleType(tupleSize)));
+                result->addCase(std::make_shared<TupleGuardPattern>(tupleSize));
             }
             else
             {

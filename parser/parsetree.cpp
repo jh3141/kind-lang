@@ -4,9 +4,13 @@ namespace kind
 {
 	namespace parser
 	{
-		bool GuardPattern::matches (TupleType tuple)
+		bool TupleGuardPattern::matches (std::shared_ptr<Type> type)
 		{
-			return tuple.size() == tuple_.size();
+			TupleType * tupleType = dynamic_cast<TupleType *>(type.get());
+			if (tupleType)
+				return tupleType->size() == size_;
+			else
+				return false;
 		}
 		
 		void LambdaExpression::addCase (std::shared_ptr<GuardPattern> guard)

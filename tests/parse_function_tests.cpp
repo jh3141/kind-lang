@@ -45,7 +45,7 @@ TEST_CASE("Empty function contains a lambda definition with an empty tuple argum
 	REQUIRE(result->declarations()[0]->type() == Declaration::DECL_TYPE_LAMBDA);
 	std::shared_ptr<LambdaExpression> lambda = result->declarations()[0]->lambda();
 	REQUIRE(lambda->patterns().size() == 1);
-	REQUIRE(lambda->patterns()[0]->matches(TupleType(0)));
+	REQUIRE(lambda->patterns()[0]->matches(std::make_shared<TupleType>(0)));
 }
 TEST_CASE("Empty function does not cause error", "[parser][errors]")
 {
@@ -60,7 +60,7 @@ TEST_CASE("Function with parameter does not match empty tuple argument", "[parse
 	REQUIRE(result->declarations()[0]->type() == Declaration::DECL_TYPE_LAMBDA);
 	std::shared_ptr<LambdaExpression> lambda = result->declarations()[0]->lambda();
 	REQUIRE(lambda->patterns().size() == 1);
-	REQUIRE(! lambda->patterns()[0]->matches(TupleType(0)));
+	REQUIRE(! lambda->patterns()[0]->matches(std::make_shared<TupleType>(0)));
 }
 TEST_CASE("Function without bracket raises error", "[parser][errors]")
 {
@@ -90,5 +90,15 @@ TEST_CASE("Multiple parameters separated by commas recognised", "[parser]")
 	REQUIRE(result->declarations()[0]->type() == Declaration::DECL_TYPE_LAMBDA);
 	std::shared_ptr<LambdaExpression> lambda = result->declarations()[0]->lambda();
 	REQUIRE(lambda->patterns().size() == 1);
-	REQUIRE(lambda->patterns()[0]->matches(TupleType(3)));
+	REQUIRE(lambda->patterns()[0]->matches(std::make_shared<TupleType>(3)));
+}
+TEST_CASE("Missing comma in argument list raises error", "[parser][errors]")
+{
+	decl_sut("testFunction(a b){}");
+	sut.parse();
+	REQUIRE (errors.getErrors().size() == 1);
+	Error error = errors.getErrors()[0];
+	REQUIRE (error.code == Error::ErrorCode::E_UNEXPECTEDTOKEN);
+	REQUIRE (error.firstParameter == "identifier");
+	REQUIRE (error.secondParameter == "',' or ')'");
 }

@@ -1,13 +1,14 @@
 #ifndef _KIND_PARSER_PARSETREE
 #define _KIND_PARSER_PARSETREE
 
+#include "kind/parser/type.h"
+
 #include <memory>
 #include <vector>
 #include <string>
 
 namespace kind
 {
-
 	namespace parser
 	{
 		class Symbol
@@ -28,23 +29,20 @@ namespace kind
 			bool isWildcard () { return wildcard; }
 		};
 		
-		class TupleType
+		class GuardPattern
+		{
+		public:
+			virtual ~GuardPattern() {}
+			virtual bool matches(std::shared_ptr<Type> argumentDescription) = 0;
+		};
+		
+		class TupleGuardPattern : public GuardPattern
 		{
 		private:
 			int size_;
 		public:
-			TupleType(int size) : size_(size) {}
-			int size() { return size_; }
-		};
-		
-		class GuardPattern
-		{
-		private:
-			TupleType tuple_;
-		public:
-			GuardPattern() : tuple_(TupleType(0)) { }
-			GuardPattern(TupleType tupleType) : tuple_(tupleType) {}
-			bool matches(TupleType argumentDescription);
+			TupleGuardPattern(int size) : size_(size) {}
+			virtual bool matches(std::shared_ptr<Type> argumentDescription);
 		};
 		
 		class LambdaExpression
