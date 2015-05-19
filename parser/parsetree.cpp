@@ -13,9 +13,9 @@ namespace kind
 				return false;
 		}
 		
-		void LambdaExpression::addCase (std::shared_ptr<GuardPattern> guard)
+		void LambdaExpression::addCase (std::shared_ptr<GuardPattern> guard, std::shared_ptr<Block> block)
 		{
-			patterns_.push_back(guard);
+			cases.push_back(Case(guard, block));
 		}
 		
 		void Declaration::makeLambda(std::shared_ptr<LambdaExpression> lambda)

@@ -2,6 +2,7 @@
 #define _KIND_PARSER_PARSETREE
 
 #include "kind/parser/type.h"
+#include "kind/parser/expression.h"
 
 #include <memory>
 #include <vector>
@@ -45,13 +46,32 @@ namespace kind
 			virtual bool matches(std::shared_ptr<Type> argumentDescription);
 		};
 		
-		class LambdaExpression
+		class Block
 		{
 		private:
-			std::vector<std::shared_ptr<GuardPattern>> patterns_;
+			std::vector<std::shared_ptr<Expression>> expressions_;
 		public:
-			void addCase (std::shared_ptr<GuardPattern> guard);
-			std::vector<std::shared_ptr<GuardPattern>> & patterns() { return patterns_; }
+			void append (std::shared_ptr<Expression> expression);
+			std::vector<std::shared_ptr<Expression>> & expressions() { return expressions_; }
+		};
+		
+		class LambdaExpression	// FIXME should be subclass of Expression
+		{
+		private:
+			struct Case
+			{
+				std::shared_ptr<GuardPattern> guard;
+				std::shared_ptr<Block> block;
+				
+				Case(std::shared_ptr<GuardPattern> guard, std::shared_ptr<Block> block) : guard(guard), block(block) { }
+			};
+			std::vector<Case> cases;
+		public:
+			void addCase (std::shared_ptr<GuardPattern> guard, std::shared_ptr<Block> block);
+			int caseCount () { return cases.size(); }
+			std::shared_ptr<GuardPattern> pattern(int i) { return cases[i].guard; }
+			std::shared_ptr<Block> block(int i) { return cases[i].block; }
+			
 		};
 		
 		class Declaration
@@ -69,7 +89,6 @@ namespace kind
 			std::shared_ptr<LambdaExpression> lambda() { return lambda_; }
 			Type type() { return type_; }
 		};
-		
 		
 		class ParseTree
 		{

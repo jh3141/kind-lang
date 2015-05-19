@@ -44,8 +44,8 @@ TEST_CASE("Empty function contains a lambda definition with an empty tuple argum
 	std::unique_ptr<ParseTree> result = sut.parse();	
 	REQUIRE(result->declarations()[0]->type() == Declaration::DECL_TYPE_LAMBDA);
 	std::shared_ptr<LambdaExpression> lambda = result->declarations()[0]->lambda();
-	REQUIRE(lambda->patterns().size() == 1);
-	REQUIRE(lambda->patterns()[0]->matches(std::make_shared<TupleType>(0)));
+	REQUIRE(lambda->caseCount() == 1);
+	REQUIRE(lambda->pattern(0)->matches(std::make_shared<TupleType>(0)));
 }
 TEST_CASE("Empty function does not cause error", "[parser][errors]")
 {
@@ -59,8 +59,8 @@ TEST_CASE("Function with parameter does not match empty tuple argument", "[parse
 	std::unique_ptr<ParseTree> result = sut.parse();	
 	REQUIRE(result->declarations()[0]->type() == Declaration::DECL_TYPE_LAMBDA);
 	std::shared_ptr<LambdaExpression> lambda = result->declarations()[0]->lambda();
-	REQUIRE(lambda->patterns().size() == 1);
-	REQUIRE(! lambda->patterns()[0]->matches(std::make_shared<TupleType>(0)));
+	REQUIRE(lambda->caseCount() == 1);
+	REQUIRE(! lambda->pattern(0)->matches(std::make_shared<TupleType>(0)));
 }
 TEST_CASE("Function without bracket raises error", "[parser][errors]")
 {
@@ -89,8 +89,8 @@ TEST_CASE("Multiple parameters separated by commas recognised", "[parser]")
 	REQUIRE (errors.getErrors().size() == 0);	
 	REQUIRE(result->declarations()[0]->type() == Declaration::DECL_TYPE_LAMBDA);
 	std::shared_ptr<LambdaExpression> lambda = result->declarations()[0]->lambda();
-	REQUIRE(lambda->patterns().size() == 1);
-	REQUIRE(lambda->patterns()[0]->matches(std::make_shared<TupleType>(3)));
+	REQUIRE(lambda->caseCount() == 1);
+	REQUIRE(lambda->pattern(0)->matches(std::make_shared<TupleType>(3)));
 }
 TEST_CASE("Missing comma in argument list raises error", "[parser][errors]")
 {
@@ -101,4 +101,14 @@ TEST_CASE("Missing comma in argument list raises error", "[parser][errors]")
 	REQUIRE (error.code == Error::ErrorCode::E_UNEXPECTEDTOKEN);
 	REQUIRE (error.firstParameter == "identifier");
 	REQUIRE (error.secondParameter == "',' or ')'");
+}
+TEST_CASE("Functions contain expressions", "[parser]")
+{
+	decl_sut("identity(a){return a;}");
+	std::unique_ptr<ParseTree> result = sut.parse();	
+	std::shared_ptr<LambdaExpression> lambda = result->declarations()[0]->lambda();
+	std::shared_ptr<Block> block = lambda->block(0);
+	REQUIRE(block->expressions().size() == 1);
+	std::shared_ptr<Expression> expr = block->expressions()[0];
+	REQUIRE(expr->type() == Expression::EXPR_TYPE_VARREF);
 }

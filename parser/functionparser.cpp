@@ -37,7 +37,7 @@ namespace kind
                         }
                     }
                 }
-                result->addCase(std::make_shared<TupleGuardPattern>(tupleSize));
+                result->addCase(std::make_shared<TupleGuardPattern>(tupleSize), std::make_shared<Block>());
             }
             else
             {
