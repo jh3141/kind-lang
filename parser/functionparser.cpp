@@ -10,6 +10,8 @@ namespace kind
             TokenStream::Iterator & current, TokenStream::Iterator end)
         {
             std::unique_ptr<LambdaExpression> result (new LambdaExpression);
+            std::shared_ptr<GuardPattern> guard;
+            std::shared_ptr<Block> block = std::make_shared<Block>();
             
             if (current->tokenType() == Token::T_LPAREN)    // start of parameter list
             {
@@ -37,7 +39,7 @@ namespace kind
                         }
                     }
                 }
-                result->addCase(std::make_shared<TupleGuardPattern>(tupleSize), std::make_shared<Block>());
+                guard = std::make_shared<TupleGuardPattern>(tupleSize);
             }
             else
             {
@@ -46,6 +48,7 @@ namespace kind
 			while (current < end && current->tokenType() != Token::T_RBRACE) 
 			    current ++;
 			current ++; // skip close brace
+			result->addCase(guard,block);
 			return result;
         }
         
