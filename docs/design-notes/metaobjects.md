@@ -17,7 +17,7 @@ Operations that are supported include:
 * Type errors (only for objects with statically-identifiable type)
 * Parsing statements beginning with an identified keyword (only for objects
   with statically identifiable type) [macros]
-* Altering the contents of classes via declarative code
+* Altering the contents of classes or behaviour of methods via declarative code
 * Post-processing changes to classes (e.g. notification when a subclass 
   adds a new method allowing the superclass to modify the subclass's code,
   add additional methods, change a parallel class heirarchy, etc.).
@@ -60,3 +60,26 @@ object that is automatically defined by the environment.  The standard `_kernel`
 is used unless and until a new definition by the same name is provided.  This
 allows a module to override core functionality of the Kind programming language
 (e.g. redefining core macros like `if` or `for`) if it wants.
+
+Some capabilities that Kind's metaprogramming facilities are expected to provide
+include:
+
+* Ability to choose between static and dynamic dispatch on a case-by-case basis
+* User-definable overload resolution rules, including multimethods
+* Method dispatch interception (e.g. for purposes of implementing aspect-
+  oriented programming)
+* Declarative programming above and beyond the normal capabilities of most
+  other OOP languages, including declarative error handling.
+* Easy addition of new control structures
+* Implementation of continuation passing style at a user-level rather than a
+  language level
+* Allow addition of facilities normally considered language features by
+  library code (e.g. capabilities like C#'s LINQ or async/await could be added
+  quite simply)
+* Allow simple code generation based on declarations, thus making many 
+  common design patterns easier to implement, and also eliminating problems
+  maintaining (e.g.) complex parallel type heirarchies.
+* Static resolution of missing methods and generation of code for them at
+  compile time (e.g. zero-overhead implementation of dynamic proxies, ORM
+  query methods a la ActiveRecord's find_by_xxx methods that are generated only
+  if they're used, etc).
