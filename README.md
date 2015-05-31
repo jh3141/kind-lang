@@ -15,6 +15,7 @@ Kind is:
 	* Scoped resource lifetimes ("RAII")
 	* Multiple strategies for memory leak avoidance including object ownership tracking and garbage collection
 * Able to run a subset of itself during compilation, thus allowing for code generation, transformation and optimization to be managed in a very simple manner.
+
 There is a [brief description of Kind's philosophy](docs/design-notes/philosophy.md).
 
 Notes on other features can be seen in these documents:
