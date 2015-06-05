@@ -45,9 +45,8 @@ namespace kind
                 unexpectedTokenError (current, "function parameter list");
             }
 
-            std::shared_ptr<Block> block = blockParser.parse (current, end);
+            result->addCase (guard, blockParser.parse (current, end));
             
-			result->addCase(guard,block);
 			return result;
         }
         
