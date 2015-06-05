@@ -4,6 +4,7 @@
 #include <memory>
 #include "kind/parser/parserutil.h"
 #include "kind/parser/parsetree.h"
+#include "kind/parser/statementparser.h"
 #include "kind/tokenizer/tokenstream.h"
 
 namespace kind
@@ -20,17 +21,6 @@ namespace kind
 			{
 			}
         	
-        };
-        
-        class StatementBlockParser : ParserUtil
-        {
-        public:
-        	StatementBlockParser (std::string filename, ErrorHandler & errorHandler) :
-        		ParserUtil(filename, errorHandler)
-        	{
-        	}
-        	
-        	std::shared_ptr<Block> parse (TokenStream::Iterator & current, TokenStream::Iterator end);
         };
         
         class LambdaExpressionParser : ParserUtil
