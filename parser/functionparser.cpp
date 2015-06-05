@@ -11,8 +11,7 @@ namespace kind
         {
             std::unique_ptr<LambdaExpression> result (new LambdaExpression);
             std::shared_ptr<GuardPattern> guard;
-            std::shared_ptr<Block> block = std::make_shared<Block>();
-            
+
             if (current->tokenType() == Token::T_LPAREN)    // start of parameter list
             {
                 current ++;
@@ -45,11 +44,20 @@ namespace kind
             {
                 unexpectedTokenError (current, "function parameter list");
             }
-			while (current < end && current->tokenType() != Token::T_RBRACE) 
-			    current ++;
+            current ++; // skip '{' (FIXME: error if not present)
+
+            std::shared_ptr<Block> block = blockParser.parse (current, end);
+            
 			current ++; // skip close brace
 			result->addCase(guard,block);
 			return result;
+        }
+        
+        std::shared_ptr<Block> StatementBlockParser::parse(TokenStream::Iterator & current, TokenStream::Iterator end)
+        {
+			while (current < end && current->tokenType() != Token::T_RBRACE) 
+			    current ++;
+            return std::make_shared<Block> ();
         }
         
 		void FunctionParser::parse (TokenStream::Iterator & current, TokenStream::Iterator end)

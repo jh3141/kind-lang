@@ -22,14 +22,27 @@ namespace kind
         	
         };
         
+        class StatementBlockParser : ParserUtil
+        {
+        public:
+        	StatementBlockParser (std::string filename, ErrorHandler & errorHandler) :
+        		ParserUtil(filename, errorHandler)
+        	{
+        	}
+        	
+        	std::shared_ptr<Block> parse (TokenStream::Iterator & current, TokenStream::Iterator end);
+        };
+        
         class LambdaExpressionParser : ParserUtil
         {
         private:
         	GuardExpressionParser guardParser;
+        	StatementBlockParser blockParser;
         public:
 			LambdaExpressionParser (std::string filename, ErrorHandler & errorHandler) :
 				ParserUtil(filename, errorHandler),
-				guardParser(filename, errorHandler)
+				guardParser(filename, errorHandler),
+				blockParser(filename, errorHandler)
 			{
 			}
 			
