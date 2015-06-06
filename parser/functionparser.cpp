@@ -50,15 +50,6 @@ namespace kind
 			return result;
         }
         
-        std::shared_ptr<Block> StatementBlockParser::parse(TokenStream::Iterator & current, TokenStream::Iterator end)
-        {
-            current ++; // skip '{' (FIXME: error if not present)
-			while (current < end && current->tokenType() != Token::T_RBRACE) 
-			    current ++;
-			current ++; // skip close brace
-            return std::make_shared<Block> ();
-        }
-        
 		void FunctionParser::parse (TokenStream::Iterator & current, TokenStream::Iterator end)
 		{
 		    auto declaration = std::make_shared<Declaration>(current->text());
