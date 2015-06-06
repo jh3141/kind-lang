@@ -15,23 +15,20 @@ namespace kind
 			
 		}
 		
-		std::unique_ptr<ParseTree> kind::parser::ModuleParser::parse()
+		std::unique_ptr<ParseTree> kind::parser::ModuleParser::parse(Parser & parser)
 		{
 			auto current = tokens.begin ();
 			auto end = tokens.end ();
-			
-			ImportParser importParser (filename, errorHandler, *result);
-			FunctionParser functionParser (filename, errorHandler, *result);
 			
 			while (current < end)
 			{
 				switch (current->tokenType())
 				{
 				case Token::Type::T_IMPORT:
-					importParser.parse (current, end);
+					parser.importParser.parse (current, end, *result);
 					break;
 				case Token::Type::T_ID:
-					functionParser.parse (current, end);
+					parser.functionParser.parse (current, end, *result);
 					break;
 					
 				default:

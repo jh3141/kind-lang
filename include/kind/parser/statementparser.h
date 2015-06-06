@@ -1,8 +1,9 @@
 #ifndef _KIND_PARSER_STATEMENTPARSER
+#define _KIND_PARSER_STATEMENTPARSER
 
 #include <memory>
-#include "kind/parser/parser.h"
 #include "kind/parser/parserutil.h"
+#include "kind/parser/parsetree.h"
 #include "kind/tokenizer/tokenstream.h"
 
 namespace kind

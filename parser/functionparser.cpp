@@ -50,7 +50,7 @@ namespace kind
 			return result;
         }
         
-		void FunctionParser::parse (TokenStream::Iterator & current, TokenStream::Iterator end)
+		void FunctionParser::parse (TokenStream::Iterator & current, TokenStream::Iterator end, ParseTree & result)
 		{
 		    auto declaration = std::make_shared<Declaration>(current->text());
 		    current++;

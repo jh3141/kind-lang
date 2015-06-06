@@ -42,16 +42,15 @@ namespace kind
 		class FunctionParser : ParserUtil
 		{
 		private:
-			ParseTree & result;
 			LambdaExpressionParser lambdaParser;
 		public:
-			FunctionParser (std::string filename, ErrorHandler & errorHandler, ParseTree & result) :
-				ParserUtil(filename, errorHandler), result(result),
+			FunctionParser (std::string filename, ErrorHandler & errorHandler) :
+				ParserUtil(filename, errorHandler), 
 				lambdaParser(filename, errorHandler)
 			{
 			}
 			
-			void parse (TokenStream::Iterator & current, TokenStream::Iterator end);
+			void parse (TokenStream::Iterator & current, TokenStream::Iterator end, ParseTree & result);
 		};
     }		
 }

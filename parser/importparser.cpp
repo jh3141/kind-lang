@@ -16,7 +16,7 @@ namespace kind
 		 * opt-wildcard-indicator ::= 
 		 *                          | "::" "*"
 		 */
-		void ImportParser::parse(TokenStream::Iterator & current, TokenStream::Iterator end)
+		void ImportParser::parse(TokenStream::Iterator & current, TokenStream::Iterator end, ParseTree & result)
 		{
 			Import symbol;
 			do

@@ -10,15 +10,13 @@ namespace kind
     {
         class ImportParser : ParserUtil
         {
-        private:
-            ParseTree & result;
         public:
-            ImportParser(std::string filename, ErrorHandler & errorHandler, ParseTree & result) : 
-                ParserUtil(filename, errorHandler), result(result)
+            ImportParser(std::string filename, ErrorHandler & errorHandler) : 
+                ParserUtil(filename, errorHandler)
             {
             }
             
-            void parse (TokenStream::Iterator& current, TokenStream::Iterator end);
+            void parse (TokenStream::Iterator& current, TokenStream::Iterator end, ParseTree & result);
         };
     }
 }

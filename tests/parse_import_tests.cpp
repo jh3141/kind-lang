@@ -23,7 +23,7 @@ extern bool kind_test_verbose;
 	ErrorStorageHandler errors; \
 	DefaultErrorPrinter errorPrinter; \
 	ErrorHandlerMultiplexer errorMultiplexer { &errors, &errorPrinter }; \
-	ModuleParser sut ("test.k", ts, kind_test_verbose ? (ErrorHandler&)errorMultiplexer : (ErrorHandler&)errors)
+	Parser sut ("test.k", ts, kind_test_verbose ? (ErrorHandler&)errorMultiplexer : (ErrorHandler&)errors)
 	
 TEST_CASE("Parsing empty string produces empty parse tree", "[parser]")
 {
