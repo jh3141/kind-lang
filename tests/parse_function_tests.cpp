@@ -112,3 +112,31 @@ TEST_CASE("Functions contain expressions", "[parser]")
 	std::shared_ptr<Expression> expr = block->expressions()[0];
 	REQUIRE(expr->type() == Expression::EXPR_TYPE_VARREF);
 }
+TEST_CASE("Functions can contain multiple expressions", "[parser]")
+{
+	decl_sut("notSoSimple(a){a;b;c;}");
+	std::unique_ptr<ParseTree> result = sut.parse();	
+	std::shared_ptr<LambdaExpression> lambda = result->declarations()[0]->lambda();
+	std::shared_ptr<Block> block = lambda->block(0);
+	REQUIRE(block->expressions().size() == 3);
+}
+TEST_CASE("Error if missing open brace", "[parser][errors]")
+{
+	decl_sut("missingBrace() hello; }");
+	sut.parse();
+	REQUIRE (errors.getErrors().size() >= 1);  // may cause additional errors later!
+	Error error = errors.getErrors()[0];
+	REQUIRE (error.code == Error::ErrorCode::E_UNEXPECTEDTOKEN);
+	REQUIRE (error.firstParameter == "identifier");
+	REQUIRE (error.secondParameter == "'{'");
+}
+TEST_CASE("Missing semicolon produces error", "[parser][errors]")
+{
+	decl_sut("missingSemicolon() { a }");
+	sut.parse();
+	REQUIRE (errors.getErrors().size() == 1);
+	Error error = errors.getErrors()[0];
+	REQUIRE (error.code == Error::ErrorCode::E_UNEXPECTEDTOKEN);
+	REQUIRE (error.firstParameter == "'}'");
+	REQUIRE (error.secondParameter == "';'");
+}
