@@ -8,14 +8,14 @@ namespace kind
 	{
 		using namespace kind::tokenizer;
 		
-		Parser::Parser(std::string filename, TokenStream & tokens, ErrorHandler & errorHandler) :
+		ModuleParser::ModuleParser(std::string filename, TokenStream & tokens, ErrorHandler & errorHandler) :
 			ParserUtil(filename, errorHandler),
 			filename(filename), tokens(tokens), errorHandler(errorHandler), result(new ParseTree)
 		{
 			
 		}
 		
-		std::unique_ptr<ParseTree> kind::parser::Parser::parse()
+		std::unique_ptr<ParseTree> kind::parser::ModuleParser::parse()
 		{
 			auto current = tokens.begin ();
 			auto end = tokens.end ();

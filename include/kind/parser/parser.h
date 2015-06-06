@@ -16,7 +16,7 @@ namespace kind
 {
 	namespace parser
 	{
-		class Parser : ParserUtil
+		class ModuleParser : ParserUtil
 		{
 		private:
 			std::string filename;
@@ -25,7 +25,7 @@ namespace kind
 			std::unique_ptr<ParseTree> result;
 			
 		public:
-			Parser (std::string filename, TokenStream & tokens, ErrorHandler & errorHandler);
+			ModuleParser (std::string filename, TokenStream & tokens, ErrorHandler & errorHandler);
 			
 			std::unique_ptr<ParseTree> parse ();
 			
