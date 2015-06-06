@@ -66,7 +66,7 @@ TEST_CASE("Function without bracket raises error", "[parser][errors]")
 {
 	decl_sut("testFunction 3 {}");
 	sut.parse();
-	REQUIRE (errors.getErrors().size() == 1);
+	REQUIRE (errors.getErrors().size() >= 1);  // may cause additional errors later!
 	Error error = errors.getErrors()[0];
 	REQUIRE (error.code == Error::ErrorCode::E_UNEXPECTEDTOKEN);
 	REQUIRE (error.firstParameter == "integer literal");
@@ -104,7 +104,7 @@ TEST_CASE("Missing comma in argument list raises error", "[parser][errors]")
 }
 TEST_CASE("Functions contain expressions", "[parser]")
 {
-	decl_sut("identity(a){return a;}");
+	decl_sut("simple(a){a;}");
 	std::unique_ptr<ParseTree> result = sut.parse();	
 	std::shared_ptr<LambdaExpression> lambda = result->declarations()[0]->lambda();
 	std::shared_ptr<Block> block = lambda->block(0);

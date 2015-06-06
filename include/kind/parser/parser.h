@@ -43,12 +43,14 @@ namespace kind
 			StatementBlockParser statementBlockParser;
 			ImportParser importParser;
 			FunctionParser functionParser;
+			ExpressionParser expressionParser;
 			
 			Parser (std::string filename, TokenStream & tokens, ErrorHandler & errorHandler)
 				: moduleParser (filename, tokens, errorHandler),
 				  statementBlockParser (filename, errorHandler),
 				  importParser (filename, errorHandler),
-				  functionParser (filename, errorHandler)
+				  functionParser (filename, errorHandler),
+				  expressionParser (filename, errorHandler)
 			{
 			}
 			

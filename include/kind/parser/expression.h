@@ -22,6 +22,15 @@ namespace kind
             virtual Type type () const = 0;
 	    };
 	    
+	    class NullExpression : public Expression
+	    {
+	    public:
+	    	static std::shared_ptr<NullExpression> INSTANCE;
+	    	
+	    	virtual Type type() const { return EXPR_NULL; }
+	    	
+	    };
+	    
 	    class VariableReferenceExpression : public Expression
 	    {
 	    public:  

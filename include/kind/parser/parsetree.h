@@ -51,7 +51,7 @@ namespace kind
 		private:
 			std::vector<std::shared_ptr<Expression>> expressions_;
 		public:
-			void append (std::shared_ptr<Expression> expression);
+			void append (std::shared_ptr<Expression> expression) { expressions_.push_back(expression); }
 			std::vector<std::shared_ptr<Expression>> & expressions() { return expressions_; }
 		};
 		

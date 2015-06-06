@@ -39,10 +39,12 @@ namespace kind
                     }
                 }
                 guard = std::make_shared<TupleGuardPattern>(tupleSize);
+                current ++; // skip rparen
             }
             else
             {
                 unexpectedTokenError (current, "function parameter list");
+                return result;
             }
 
             result->addCase (guard, parser.statementBlockParser.parse (current, end, parser));
