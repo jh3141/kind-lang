@@ -28,7 +28,7 @@ namespace kind
 					parser.importParser.parse (current, end, *result);
 					break;
 				case Token::Type::T_ID:
-					parser.functionParser.parse (current, end, *result);
+					parser.functionParser.parse (current, end, *result, parser);
 					break;
 					
 				default:

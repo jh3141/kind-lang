@@ -12,6 +12,8 @@ namespace kind
     {
         using namespace kind::tokenizer;
         
+        class Parser;
+        
         class StatementBlockParser : ParserUtil
         {
         public:
@@ -20,7 +22,7 @@ namespace kind
         	{
         	}
         	
-        	std::shared_ptr<Block> parse (TokenStream::Iterator & current, TokenStream::Iterator end);
+        	std::shared_ptr<Block> parse (TokenStream::Iterator & current, TokenStream::Iterator end, Parser & parser);
         };
 
         

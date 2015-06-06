@@ -13,6 +13,8 @@ namespace kind
     {
         using namespace kind::tokenizer;
         
+        class Parser;
+        
         class GuardExpressionParser : ParserUtil
         {
         public:
@@ -27,16 +29,14 @@ namespace kind
         {
         private:
         	GuardExpressionParser guardParser;
-        	StatementBlockParser blockParser;
         public:
 			LambdaExpressionParser (std::string filename, ErrorHandler & errorHandler) :
 				ParserUtil(filename, errorHandler),
-				guardParser(filename, errorHandler),
-				blockParser(filename, errorHandler)
+				guardParser(filename, errorHandler)
 			{
 			}
 			
-			std::unique_ptr<LambdaExpression> parse (TokenStream::Iterator & current, TokenStream::Iterator end);
+			std::unique_ptr<LambdaExpression> parse (TokenStream::Iterator & current, TokenStream::Iterator end, Parser & parser);
         };
         
 		class FunctionParser : ParserUtil
@@ -50,7 +50,7 @@ namespace kind
 			{
 			}
 			
-			void parse (TokenStream::Iterator & current, TokenStream::Iterator end, ParseTree & result);
+			void parse (TokenStream::Iterator & current, TokenStream::Iterator end, ParseTree & result, Parser & parser);
 		};
     }		
 }

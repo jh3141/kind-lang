@@ -6,7 +6,7 @@ namespace kind
     {
         using namespace kind::tokenizer;
         
-        std::shared_ptr<Block> StatementBlockParser::parse(TokenStream::Iterator & current, TokenStream::Iterator end)
+        std::shared_ptr<Block> StatementBlockParser::parse(TokenStream::Iterator & current, TokenStream::Iterator end, Parser & parser)
         {
             current ++; // skip '{' (FIXME: error if not present)
 			while (current < end && current->tokenType() != Token::T_RBRACE) 

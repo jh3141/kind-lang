@@ -1,4 +1,4 @@
-#include "kind/parser/functionparser.h"
+#include "kind/parser/parser.h"
 
 namespace kind
 {
@@ -7,7 +7,7 @@ namespace kind
         using namespace kind::tokenizer;
         
         std::unique_ptr<LambdaExpression> LambdaExpressionParser::parse(
-            TokenStream::Iterator & current, TokenStream::Iterator end)
+            TokenStream::Iterator & current, TokenStream::Iterator end, Parser & parser)
         {
             std::unique_ptr<LambdaExpression> result (new LambdaExpression);
             std::shared_ptr<GuardPattern> guard;
@@ -45,16 +45,16 @@ namespace kind
                 unexpectedTokenError (current, "function parameter list");
             }
 
-            result->addCase (guard, blockParser.parse (current, end));
+            result->addCase (guard, parser.statementBlockParser.parse (current, end, parser));
             
 			return result;
         }
         
-		void FunctionParser::parse (TokenStream::Iterator & current, TokenStream::Iterator end, ParseTree & result)
+		void FunctionParser::parse (TokenStream::Iterator & current, TokenStream::Iterator end, ParseTree & result, Parser & parser)
 		{
 		    auto declaration = std::make_shared<Declaration>(current->text());
 		    current++;
-		    declaration->makeLambda(lambdaParser.parse(current, end));
+		    declaration->makeLambda(lambdaParser.parse(current, end, parser));
 			result.declarations().push_back(declaration);
 		}
     }
