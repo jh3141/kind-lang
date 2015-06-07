@@ -114,7 +114,7 @@ TEST_CASE("Functions contain expressions", "[parser]")
 }
 TEST_CASE("Functions can contain multiple expressions", "[parser]")
 {
-	decl_sut("notSoSimple(a){a;b;c;}");
+	decl_sut("notSoSimple(a,b,c){a;b;c;}");
 	std::unique_ptr<ParseTree> result = sut.parse();	
 	std::shared_ptr<LambdaExpression> lambda = result->declarations()[0]->lambda();
 	std::shared_ptr<Block> block = lambda->block(0);

@@ -33,9 +33,15 @@ namespace kind
 	    
 	    class VariableReferenceExpression : public Expression
 	    {
+	    private:
+	    	std::string variableName_;
 	    public:  
+	    	VariableReferenceExpression(std::string variableName)
+	    		: variableName_(variableName)
+	    	{
+	    	}
 	        virtual Type type () const { return EXPR_TYPE_VARREF; }
-	        
+	        std::string variableName() const { return variableName_; }
 	    };
 	}
 }

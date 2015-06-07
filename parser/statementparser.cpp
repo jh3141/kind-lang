@@ -39,11 +39,12 @@ namespace kind
         
         std::shared_ptr<Expression> ExpressionParser::parse(TokenStream::Iterator & current, TokenStream::Iterator end, Parser & parser)
         {
+            std::string text = current->text ();
             switch (current->tokenType())
             {
                 case Token::T_ID:
                     current ++;
-                    return std::make_shared<VariableReferenceExpression> ();
+                    return std::make_shared<VariableReferenceExpression> (text);
                 default:
                     unexpectedTokenError (current, "start of expression");
                     current ++;
