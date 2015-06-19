@@ -1,3 +1,4 @@
+#include <memory>
 #include "kind/parser/parsetree.h"
 
 namespace kind
@@ -15,7 +16,7 @@ namespace kind
 		
 		void LambdaExpression::addCase (std::shared_ptr<GuardPattern> guard, std::shared_ptr<Block> block)
 		{
-			cases.push_back(Case(guard, block));
+			cases.push_back(Case(guard, block, std::make_shared<Scope>()));
 		}
 		
 		void Declaration::makeLambda(std::shared_ptr<LambdaExpression> lambda)

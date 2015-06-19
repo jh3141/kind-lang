@@ -140,3 +140,11 @@ TEST_CASE("Missing semicolon produces error", "[parser][errors]")
 	REQUIRE (error.firstParameter == "'}'");
 	REQUIRE (error.secondParameter == "';'");
 }
+TEST_CASE("Functions declare variables for their guard pattern parameters")
+{
+	decl_sut("func(a) { }");
+	std::unique_ptr<ParseTree> result = sut.parse();	
+	std::shared_ptr<LambdaExpression> lambda = result->declarations()[0]->lambda();
+	std::shared_ptr<Scope> scope = lambda->scope(0);
+	REQUIRE((bool) scope->get("a"));
+}

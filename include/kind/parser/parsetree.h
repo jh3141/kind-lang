@@ -46,6 +46,19 @@ namespace kind
 			virtual bool matches(std::shared_ptr<Type> argumentDescription);
 		};
 		
+		class Variable
+		{
+		private:
+		public:
+		};
+		
+		class Scope
+		{
+		private:
+		public:
+			std::shared_ptr<Variable> get(std::string name) { return std::shared_ptr<Variable>(); }
+		};
+		
 		class Block
 		{
 		private:
@@ -62,8 +75,12 @@ namespace kind
 			{
 				std::shared_ptr<GuardPattern> guard;
 				std::shared_ptr<Block> block;
+				std::shared_ptr<Scope> scope;
 				
-				Case(std::shared_ptr<GuardPattern> guard, std::shared_ptr<Block> block) : guard(guard), block(block) { }
+				Case(std::shared_ptr<GuardPattern> guard, std::shared_ptr<Block> block, std::shared_ptr<Scope> scope) : 
+					guard(guard), block(block), scope(scope) 
+				{ 
+				}
 			};
 			std::vector<Case> cases;
 		public:
@@ -71,7 +88,7 @@ namespace kind
 			int caseCount () { return cases.size(); }
 			std::shared_ptr<GuardPattern> pattern(int i) { return cases[i].guard; }
 			std::shared_ptr<Block> block(int i) { return cases[i].block; }
-			
+			std::shared_ptr<Scope> scope(int i) { return cases[i].scope; }
 		};
 		
 		class Declaration
