@@ -40,10 +40,12 @@ namespace kind
 		class TupleGuardPattern : public GuardPattern
 		{
 		private:
-			int size_;
+			std::vector<std::string> identifiers;
 		public:
-			TupleGuardPattern(int size) : size_(size) {}
+			TupleGuardPattern(std::vector<std::string> identifiers) : identifiers(identifiers) {}
 			virtual bool matches(std::shared_ptr<Type> argumentDescription);
+			size_t size() { return identifiers.size(); }
+			std::string fieldIdentifier(int fieldIndex) { return identifiers[fieldIndex]; }
 		};
 		
 		class Variable

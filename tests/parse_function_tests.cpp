@@ -102,6 +102,14 @@ TEST_CASE("Missing comma in argument list raises error", "[parser][errors]")
 	REQUIRE (error.firstParameter == "identifier");
 	REQUIRE (error.secondParameter == "',' or ')'");
 }
+TEST_CASE("Function parameter patterns know the identifiers of their variables", "[parser]")
+{
+	decl_sut("testFunction(a){}");
+	std::unique_ptr<ParseTree> result = sut.parse();	
+	std::shared_ptr<LambdaExpression> lambda = result->declarations()[0]->lambda();
+	std::shared_ptr<TupleGuardPattern> guard = std::dynamic_pointer_cast<TupleGuardPattern>(lambda->pattern(0));
+	REQUIRE(guard->fieldIdentifier(0) == "a");
+}
 TEST_CASE("Functions contain expressions", "[parser]")
 {
 	decl_sut("simple(a){a;}");

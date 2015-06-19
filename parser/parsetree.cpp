@@ -9,7 +9,7 @@ namespace kind
 		{
 			TupleType * tupleType = dynamic_cast<TupleType *>(type.get());
 			if (tupleType)
-				return tupleType->size() == size_;
+				return tupleType->size() == identifiers.size();
 			else
 				return false;
 		}

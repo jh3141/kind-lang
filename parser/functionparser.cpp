@@ -1,3 +1,4 @@
+#include <vector>
 #include "kind/parser/parser.h"
 
 namespace kind
@@ -11,11 +12,11 @@ namespace kind
         {
             std::unique_ptr<LambdaExpression> result (new LambdaExpression);
             std::shared_ptr<GuardPattern> guard;
-
+            
             if (current->tokenType() == Token::T_LPAREN)    // start of parameter list
             {
                 current ++;
-                int tupleSize = 0;
+                std::vector<std::string> tupleFields;
                 while (current < end && current->tokenType() != Token::T_RPAREN) {
                     if (current->tokenType() != Token::T_ID)
                     {
@@ -25,8 +26,8 @@ namespace kind
                     }
                     else
                     {
+                        tupleFields.push_back(current->text());
                         current ++;
-                        tupleSize ++;
                         switch (current->tokenType())
                         {
                             case Token::T_RPAREN: break;    // last entry in list
@@ -38,7 +39,7 @@ namespace kind
                         }
                     }
                 }
-                guard = std::make_shared<TupleGuardPattern>(tupleSize);
+                guard = std::make_shared<TupleGuardPattern>(tupleFields);   // PERF does this move the vector contents?
                 current ++; // skip rparen
             }
             else
