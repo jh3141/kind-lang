@@ -7,6 +7,7 @@
 #include <memory>
 #include <vector>
 #include <string>
+#include <unordered_map>
 
 namespace kind
 {
@@ -30,24 +31,6 @@ namespace kind
 			bool isWildcard () { return wildcard; }
 		};
 		
-		class GuardPattern
-		{
-		public:
-			virtual ~GuardPattern() {}
-			virtual bool matches(std::shared_ptr<Type> argumentDescription) = 0;
-		};
-		
-		class TupleGuardPattern : public GuardPattern
-		{
-		private:
-			std::vector<std::string> identifiers;
-		public:
-			TupleGuardPattern(std::vector<std::string> identifiers) : identifiers(identifiers) {}
-			virtual bool matches(std::shared_ptr<Type> argumentDescription);
-			size_t size() { return identifiers.size(); }
-			std::string fieldIdentifier(int fieldIndex) { return identifiers[fieldIndex]; }
-		};
-		
 		class Variable
 		{
 		private:
@@ -57,8 +40,37 @@ namespace kind
 		class Scope
 		{
 		private:
+			std::unordered_map<std::string, std::shared_ptr<Variable>> variables;
 		public:
-			std::shared_ptr<Variable> get(std::string name) { return std::shared_ptr<Variable>(); }
+			void add (std::string name, std::shared_ptr<Variable> variable) { variables[name] = variable; }
+			std::shared_ptr<Variable> get(std::string name) { 
+				auto i = variables.find(name);
+				if (i == variables.end())
+					return std::shared_ptr<Variable>(); 
+				else
+					return std::get<1>(*i);
+			}
+		};
+		
+		
+		class GuardPattern
+		{
+		public:
+			virtual ~GuardPattern() {}
+			virtual bool matches(std::shared_ptr<Type> argumentDescription) = 0;
+			virtual std::shared_ptr<Scope> generateScope() = 0;
+		};
+		
+		class TupleGuardPattern : public GuardPattern
+		{
+		private:
+			std::vector<std::string> identifiers;
+		public:
+			TupleGuardPattern(std::vector<std::string> identifiers) : identifiers(identifiers) {}
+			virtual bool matches(std::shared_ptr<Type> argumentDescription);
+			virtual std::shared_ptr<Scope> generateScope();
+			size_t size() { return identifiers.size(); }
+			std::string fieldIdentifier(int fieldIndex) { return identifiers[fieldIndex]; }
 		};
 		
 		class Block
