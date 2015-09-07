@@ -23,7 +23,7 @@ class LinkedList
 	
 	contains(value : T) : boolean
 	{
-		var e = head;
+		e := head;	// 'id : [optional-type] = expr' declares and initialises
 		while (e)
 		{
 			if (e.value.item == value) return true;

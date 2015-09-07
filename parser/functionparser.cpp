@@ -39,7 +39,7 @@ namespace kind
                         }
                     }
                 }
-                guard = std::make_shared<TupleGuardPattern>(tupleFields);   // PERF does this move the vector contents?
+                guard = std::make_shared<GuardPattern>(tupleFields);   // PERF does this move the vector contents?
                 current ++; // skip rparen
             }
             else

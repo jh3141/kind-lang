@@ -107,7 +107,7 @@ TEST_CASE("Function parameter patterns know the identifiers of their variables",
 	decl_sut("testFunction(a){}");
 	std::unique_ptr<ParseTree> result = sut.parse();	
 	std::shared_ptr<LambdaExpression> lambda = result->declarations()[0]->lambda();
-	std::shared_ptr<TupleGuardPattern> guard = std::dynamic_pointer_cast<TupleGuardPattern>(lambda->pattern(0));
+	std::shared_ptr<GuardPattern> guard = std::dynamic_pointer_cast<GuardPattern>(lambda->pattern(0));
 	REQUIRE(guard->fieldIdentifier(0) == "a");
 }
 TEST_CASE("Functions contain expressions", "[parser]")
@@ -140,7 +140,7 @@ TEST_CASE("Error if missing open brace", "[parser][errors]")
 }
 TEST_CASE("Missing semicolon produces error", "[parser][errors]")
 {
-	decl_sut("missingSemicolon() { a }");
+	decl_sut("missingSemicolon(a) { a }");
 	sut.parse();
 	REQUIRE (errors.getErrors().size() == 1);
 	Error error = errors.getErrors()[0];

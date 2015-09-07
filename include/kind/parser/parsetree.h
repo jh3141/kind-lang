@@ -55,18 +55,10 @@ namespace kind
 		
 		class GuardPattern
 		{
-		public:
-			virtual ~GuardPattern() {}
-			virtual bool matches(std::shared_ptr<Type> argumentDescription) = 0;
-			virtual std::shared_ptr<Scope> generateScope() = 0;
-		};
-		
-		class TupleGuardPattern : public GuardPattern
-		{
 		private:
 			std::vector<std::string> identifiers;
 		public:
-			TupleGuardPattern(std::vector<std::string> identifiers) : identifiers(identifiers) {}
+			GuardPattern(std::vector<std::string> identifiers) : identifiers(identifiers) {}
 			virtual bool matches(std::shared_ptr<Type> argumentDescription);
 			virtual std::shared_ptr<Scope> generateScope();
 			size_t size() { return identifiers.size(); }

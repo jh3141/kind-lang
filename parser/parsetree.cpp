@@ -5,7 +5,7 @@ namespace kind
 {
 	namespace parser
 	{
-		bool TupleGuardPattern::matches (std::shared_ptr<Type> type)
+		bool GuardPattern::matches (std::shared_ptr<Type> type)
 		{
 			TupleType * tupleType = dynamic_cast<TupleType *>(type.get());
 			if (tupleType)
@@ -14,7 +14,7 @@ namespace kind
 				return false;
 		}
 		
-		std::shared_ptr<Scope> TupleGuardPattern::generateScope ()
+		std::shared_ptr<Scope> GuardPattern::generateScope ()
 		{
 			std::shared_ptr<Scope> result = std::make_shared<Scope> ();
 			for (auto identifier : identifiers)
