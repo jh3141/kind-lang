@@ -5,13 +5,13 @@ namespace kind
 {
 	namespace parser
 	{
-		bool GuardPattern::matches (std::shared_ptr<Type> type)
+		GuardPattern::MatchClass GuardPattern::matches (std::shared_ptr<Type> type)
 		{
 			TupleType * tupleType = dynamic_cast<TupleType *>(type.get());
 			if (tupleType)
-				return tupleType->size() == identifiers.size();
+				return tupleType->size() == identifiers.size() ? MatchClass::ALWAYS : MatchClass::NEVER;
 			else
-				return false;
+				return MatchClass::NEVER;
 		}
 		
 		std::shared_ptr<Scope> GuardPattern::generateScope ()

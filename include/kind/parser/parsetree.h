@@ -58,8 +58,10 @@ namespace kind
 		private:
 			std::vector<std::string> identifiers;
 		public:
+			enum MatchClass { NEVER, SOMETIMES, ALWAYS };
+			
 			GuardPattern(std::vector<std::string> identifiers) : identifiers(identifiers) {}
-			virtual bool matches(std::shared_ptr<Type> argumentDescription);
+			virtual MatchClass matches(std::shared_ptr<Type> argumentDescription);
 			virtual std::shared_ptr<Scope> generateScope();
 			size_t size() { return identifiers.size(); }
 			std::string fieldIdentifier(int fieldIndex) { return identifiers[fieldIndex]; }
