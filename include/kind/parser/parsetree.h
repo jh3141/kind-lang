@@ -8,6 +8,7 @@
 #include <vector>
 #include <string>
 #include <unordered_map>
+#include <initializer_list>
 
 namespace kind
 {
@@ -52,6 +53,27 @@ namespace kind
 			}
 		};
 		
+		class Argument
+		{
+		private:
+			std::shared_ptr<Type> type_;
+		public:
+			Argument(std::shared_ptr<Type> type) : type_(type) {}
+			std::shared_ptr<Type> type() { return type_; }
+		};
+		
+		class ArgumentList
+		{
+		private:
+			std::vector<Argument> arguments;
+		public:
+			ArgumentList(std::initializer_list<std::shared_ptr<Type>> types)
+			{
+				for (auto type : types)
+					arguments.emplace_back(type);
+			}
+			size_t size() { return arguments.size(); }
+		};
 		
 		class GuardPattern
 		{
@@ -61,7 +83,7 @@ namespace kind
 			enum MatchClass { NEVER, SOMETIMES, ALWAYS };
 			
 			GuardPattern(std::vector<std::string> identifiers) : identifiers(identifiers) {}
-			virtual MatchClass matches(std::shared_ptr<Type> argumentDescription);
+			virtual MatchClass matches(ArgumentList argumentDescriptions);
 			virtual std::shared_ptr<Scope> generateScope();
 			size_t size() { return identifiers.size(); }
 			std::string fieldIdentifier(int fieldIndex) { return identifiers[fieldIndex]; }

@@ -24,6 +24,11 @@ namespace kind
             int size() { return size_; }
         };
         
+        class NumericType : public Type
+        {
+        public:
+            static std::shared_ptr<NumericType> INT;
+        };
     }
 }
 #endif
