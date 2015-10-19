@@ -15,17 +15,6 @@ namespace kind
         
         class Parser;
         
-        class ExpressionParser : ParserUtil
-        {
-        public:
-            ExpressionParser (std::string filename, ErrorHandler & errorHandler) :
-                ParserUtil (filename, errorHandler)
-            {
-            }
-            
-            std::shared_ptr<Expression> parse (TokenStream::Iterator & current, TokenStream::Iterator end, Parser & parser);
-        };
-        
         class StatementBlockParser : ParserUtil
         {
         public:

@@ -11,6 +11,7 @@
 #include "kind/parser/parserutil.h"
 #include "kind/parser/functionparser.h"
 #include "kind/parser/statementparser.h"
+#include "kind/parser/expressionparser.h"
 #include "kind/parser/importparser.h"
 
 using namespace kind::tokenizer;

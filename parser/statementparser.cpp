@@ -1,5 +1,4 @@
 #include "kind/parser/parser.h"
-#include "kind/parser/statementparser.h"
 
 namespace kind
 {
@@ -20,8 +19,11 @@ namespace kind
             else
                 current ++; // skip '{' (FIXME: error if not present)
                 
-			while (current < end && current->tokenType() != Token::T_RBRACE) {
+			while (current < end && current->tokenType() != Token::T_RBRACE) 
+			{
+			    // at present, the only type of statement we support is an expression:
 			    result->append (parser.expressionParser.parse(current, end, parser));
+			    // expressions should be semicolon-terminated.
 			    if (current->tokenType() != Token::T_SEMI)
 			    {
 			        unexpectedTokenError (current, "';'");
@@ -30,6 +32,8 @@ namespace kind
 			    {
 			        current ++;
 			    }
+			    
+			    // FIXME check for other statement types
 			}
 			    
 			current ++; // skip close brace
@@ -37,20 +41,6 @@ namespace kind
             return result;
         }
         
-        std::shared_ptr<Expression> ExpressionParser::parse(TokenStream::Iterator & current, TokenStream::Iterator end, Parser & parser)
-        {
-            std::string text = current->text ();
-            switch (current->tokenType())
-            {
-                case Token::T_ID:
-                    current ++;
-                    return std::make_shared<VariableReferenceExpression> (text);
-                default:
-                    unexpectedTokenError (current, "start of expression");
-                    current ++;
-                    return NullExpression::INSTANCE;
-            }
-        }
     }
 }
 
