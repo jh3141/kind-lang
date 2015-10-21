@@ -32,7 +32,24 @@ namespace kind
          * Token type table
          * ============================================================================================================================
          */
-          
+        class ExpressionParserTables
+        {
+        public:
+            std::array<PrefixParser, Token::Type::T_MAX> prefix;
+            std::array<InfixParser, Token::Type::T_MAX> infix;
+            std::array<int, Token::Type::T_MAX> precedence;
+            
+            ExpressionParserTables ()
+            {
+                addPrefix (Token::T_ID, [] (ParseContext & context, TokenStream::Iterator & current) { return std::make_shared<VariableReferenceExpression> (current->text()); });
+            }
+            
+            void addPrefix (int id, PrefixParser parser) { prefix[id] = parser; }
+            
+        };
+        
+        ExpressionParserTables eptabs;
+        
         /*
          * ============================================================================================================================
          * Main parser function
@@ -41,16 +58,20 @@ namespace kind
         
         std::shared_ptr<Expression> ExpressionParser::parse(TokenStream::Iterator & current, TokenStream::Iterator end, Parser & parser)
         {
-            std::string text = current->text ();
-            switch (current->tokenType())
+            ParseContext context = { parser, *this };
+            Token::Type ttype = current->tokenType ();
+            
+            if (eptabs.prefix[ttype])
             {
-                case Token::T_ID:
-                    current ++;
-                    return std::make_shared<VariableReferenceExpression> (text);
-                default:
-                    unexpectedTokenError (current, "start of expression");
-                    current ++;
-                    return NullExpression::INSTANCE;
+                 std::shared_ptr<Expression> e = eptabs.prefix[ttype] (context, current);
+                 current ++;
+                 return e;
+            }
+            else            
+            {
+                unexpectedTokenError (current, "start of expression");
+                current ++;
+                return NullExpression::INSTANCE;
             }
         }
     }

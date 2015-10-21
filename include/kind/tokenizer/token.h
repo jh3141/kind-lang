@@ -70,7 +70,8 @@ namespace kind
 				T_NEW,
 				T_WHILE,
 				T_IF,
-				T_UNTERMINATEDSTRING
+				T_UNTERMINATEDSTRING,
+				T_MAX
             };
             
         private:
