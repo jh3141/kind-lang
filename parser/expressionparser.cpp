@@ -41,8 +41,9 @@ namespace kind
             
             ExpressionParserTables ()
             {
-                addPrefix (Token::T_ID, [] (ParseContext & context, TokenStream::Iterator & current, TokenStream::Iterator end) { return std::make_shared<VariableReferenceExpression> (current->text()); });
+                addPrefix (Token::T_ID, [] (ParseContext & context, TokenStream::Iterator & current, TokenStream::Iterator end) { return std::make_shared<VariableReferenceExpression> ((current++)->text()); });
                 addInfix (Token::T_PLUS, [] (ParseContext & context, std::shared_ptr<Expression> left, TokenStream::Iterator & current, TokenStream::Iterator end) { 
+                    current++;
                     return std::make_shared<BinaryOperationExpression> (left, context.expressionParser.parse(current, end, context.parser), Token::T_PLUS);
                 });
             }
@@ -73,7 +74,7 @@ namespace kind
             }
             std::shared_ptr<Expression> left = eptabs.prefix[ttype] (context, current, end);
             
-            while (++current < end)
+            while (current < end)  // note that both prefix and infix parsers should advance the tokenizer
             {
                 ttype = current->tokenType ();
                 if (! eptabs.infix[ttype]) break;
