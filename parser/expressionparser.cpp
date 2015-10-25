@@ -26,7 +26,7 @@ namespace kind
             TokenStream::Iterator end;
             std::function<void(TokenStream::Iterator,std::string)> unexpectedTokenError;
             
-            std::shared_ptr<Expression> parse ();
+            std::shared_ptr<Expression> parse (int precedence = 0);
         };
         typedef std::function<std::shared_ptr<Expression>(ParseContext & context)> PrefixParser;
         typedef std::function<std::shared_ptr<Expression>(ParseContext & context, std::shared_ptr<Expression> left)> InfixParser;
@@ -51,15 +51,17 @@ namespace kind
                     context.current ++;
                     return std::make_shared<VariableReferenceExpression> (text); 
                 });
-                addInfix (Token::T_PLUS, [] (ParseContext & context, std::shared_ptr<Expression> left) { 
+                addInfix (Token::T_PLUS, 60, [] (ParseContext & context, std::shared_ptr<Expression> left) { 
                     context.current ++;
-                    return std::make_shared<BinaryOperationExpression> (left, context.parse(), Token::T_PLUS);
+                    return std::make_shared<BinaryOperationExpression> (left, context.parse(60), Token::T_PLUS);
                 });
             }
             
             void addPrefix (int id, PrefixParser parser) { prefix[id] = parser; }
-            void addInfix (int id, InfixParser parser) { infix[id] = parser; }
-            
+            void addInfix (int id, int tokenPrecedence, InfixParser parser) { 
+                infix[id] = parser;
+                precedence[id] = tokenPrecedence;
+            }
         };
         
         ExpressionParserTables eptabs;
@@ -70,7 +72,7 @@ namespace kind
          * ============================================================================================================================
          */
 
-        std::shared_ptr<Expression> ParseContext::parse ()
+        std::shared_ptr<Expression> ParseContext::parse (int precedence)
         {
             Token::Type ttype = current->tokenType ();
             
@@ -85,7 +87,8 @@ namespace kind
             while (current < end)  // note that both prefix and infix parsers should advance the tokenizer
             {
                 ttype = current->tokenType ();
-                if (! eptabs.infix[ttype]) break;
+                if (! eptabs.infix[ttype]) break;                   // no operator matching token
+                if (eptabs.precedence[ttype] <= precedence) break;  // operator has lower precedence than the outer token we're binding our result to
                 left = eptabs.infix[ttype] (*this, left);
             }
             
