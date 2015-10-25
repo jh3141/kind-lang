@@ -41,9 +41,13 @@ namespace kind
             
             ExpressionParserTables ()
             {
-                addPrefix (Token::T_ID, [] (ParseContext & context, TokenStream::Iterator & current, TokenStream::Iterator end) { return std::make_shared<VariableReferenceExpression> ((current++)->text()); });
+                addPrefix (Token::T_ID, [] (ParseContext & context, TokenStream::Iterator & current, TokenStream::Iterator end) { 
+                    auto text = current->text();
+                    current ++;
+                    return std::make_shared<VariableReferenceExpression> (text); 
+                });
                 addInfix (Token::T_PLUS, [] (ParseContext & context, std::shared_ptr<Expression> left, TokenStream::Iterator & current, TokenStream::Iterator end) { 
-                    current++;
+                    current ++;
                     return std::make_shared<BinaryOperationExpression> (left, context.expressionParser.parse(current, end, context.parser), Token::T_PLUS);
                 });
             }
