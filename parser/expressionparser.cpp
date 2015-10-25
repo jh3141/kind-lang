@@ -23,8 +23,8 @@ namespace kind
             Parser & parser;
             ExpressionParser & expressionParser;
         };
-        typedef std::function<std::shared_ptr<Expression>(ParseContext & context, TokenStream::Iterator & current)> PrefixParser;
-        typedef std::function<std::shared_ptr<Expression>(ParseContext & context, std::shared_ptr<Expression> left, TokenStream::Iterator & current)> InfixParser;
+        typedef std::function<std::shared_ptr<Expression>(ParseContext & context, TokenStream::Iterator & current, TokenStream::Iterator end)> PrefixParser;
+        typedef std::function<std::shared_ptr<Expression>(ParseContext & context, std::shared_ptr<Expression> left, TokenStream::Iterator & current, TokenStream::Iterator end)> InfixParser;
         
         
         /*
@@ -41,10 +41,14 @@ namespace kind
             
             ExpressionParserTables ()
             {
-                addPrefix (Token::T_ID, [] (ParseContext & context, TokenStream::Iterator & current) { return std::make_shared<VariableReferenceExpression> (current->text()); });
+                addPrefix (Token::T_ID, [] (ParseContext & context, TokenStream::Iterator & current, TokenStream::Iterator end) { return std::make_shared<VariableReferenceExpression> (current->text()); });
+                addInfix (Token::T_PLUS, [] (ParseContext & context, std::shared_ptr<Expression> left, TokenStream::Iterator & current, TokenStream::Iterator end) { 
+                    return std::make_shared<BinaryOperationExpression> (left, context.expressionParser.parse(current, end, context.parser), Token::T_PLUS);
+                });
             }
             
             void addPrefix (int id, PrefixParser parser) { prefix[id] = parser; }
+            void addInfix (int id, InfixParser parser) { infix[id] = parser; }
             
         };
         
@@ -61,18 +65,22 @@ namespace kind
             ParseContext context = { parser, *this };
             Token::Type ttype = current->tokenType ();
             
-            if (eptabs.prefix[ttype])
-            {
-                 std::shared_ptr<Expression> e = eptabs.prefix[ttype] (context, current);
-                 current ++;
-                 return e;
-            }
-            else            
+            if (! eptabs.prefix[ttype])
             {
                 unexpectedTokenError (current, "start of expression");
                 current ++;
                 return NullExpression::INSTANCE;
             }
+            std::shared_ptr<Expression> left = eptabs.prefix[ttype] (context, current, end);
+            
+            while (++current < end)
+            {
+                ttype = current->tokenType ();
+                if (! eptabs.infix[ttype]) break;
+                left = eptabs.infix[ttype] (context, left, current, end);
+            }
+            
+            return left;
         }
     }
 }
