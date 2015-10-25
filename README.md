@@ -6,15 +6,15 @@ Kind is:
 * Multi-paradigm (with support for object-oriented, generic and functional features).
 * Gradually typed, with a choice of structural or nominal typing.  Type inference is used heavily to identify as many
   types as possible at compile time.
-* Compiled to native code, with heavy use of type specialization to produce code with as little dynamic dispatch as
-  possible.
+* Compilable to native code, with heavy use of type specialization to produce code with as little dynamic dispatch as
+  possible, but also efficiently interpretable in order to allow rapid execution without long compile cycles.
 * Reflective (although some reflection options may require the use of just-in-time compilation, which is optional) with support for both compile-time and run-time metaprogramming via a fully-featured meta object protocol.
 * Designed to support modern programming practices:
 	* Immutability
 	* Practices for safe lock-free sharing of data between multiple threads
 	* Scoped resource lifetimes ("RAII")
 	* Multiple strategies for memory leak avoidance including object ownership tracking and garbage collection
-* Able to run a subset of itself during compilation, thus allowing for code generation, transformation and optimization to be managed in a very simple manner.
+* Able to run during compilation, thus allowing for code generation, transformation, optimization and other metaprogramming tasks to be managed in a very simple and intuitive manner.
 
 There is a [brief description of Kind's philosophy](docs/design-notes/philosophy.md).
 
