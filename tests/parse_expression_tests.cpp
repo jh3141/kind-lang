@@ -45,6 +45,16 @@ TEST_CASE("Infix operators can be used", "[parser]")
 	decl_parse_expr("simple(a,b){a + b;}");
 	REQUIRE(expr->type() == Expression::EXPR_TYPE_BINOP);
 }
+TEST_CASE("Invalid expression start error correct", "[parser][errors]")
+{
+	decl_sut("testFunction(a){/;}");
+	sut.parse();
+	REQUIRE (errors.getErrors().size() == 1);
+	Error error = errors.getErrors()[0];
+	REQUIRE (error.code == Error::ErrorCode::E_UNEXPECTEDTOKEN);
+	REQUIRE (error.firstParameter == "'/'");
+	REQUIRE (error.secondParameter == "start of expression");
+}
 TEST_CASE("Infix operators left associative", "[parser]")
 {
 	decl_parse_expr("simple(a,b,c){a + b + c;}");

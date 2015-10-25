@@ -22,9 +22,14 @@ namespace kind
         struct ParseContext {
             Parser & parser;
             ExpressionParser & expressionParser;
+            TokenStream::Iterator & current;
+            TokenStream::Iterator end;
+            std::function<void(TokenStream::Iterator,std::string)> unexpectedTokenError;
+            
+            std::shared_ptr<Expression> parse ();
         };
-        typedef std::function<std::shared_ptr<Expression>(ParseContext & context, TokenStream::Iterator & current, TokenStream::Iterator end)> PrefixParser;
-        typedef std::function<std::shared_ptr<Expression>(ParseContext & context, std::shared_ptr<Expression> left, TokenStream::Iterator & current, TokenStream::Iterator end)> InfixParser;
+        typedef std::function<std::shared_ptr<Expression>(ParseContext & context)> PrefixParser;
+        typedef std::function<std::shared_ptr<Expression>(ParseContext & context, std::shared_ptr<Expression> left)> InfixParser;
         
         
         /*
@@ -41,14 +46,14 @@ namespace kind
             
             ExpressionParserTables ()
             {
-                addPrefix (Token::T_ID, [] (ParseContext & context, TokenStream::Iterator & current, TokenStream::Iterator end) { 
-                    auto text = current->text();
-                    current ++;
+                addPrefix (Token::T_ID, [] (ParseContext & context) { 
+                    auto text = context.current->text();
+                    context.current ++;
                     return std::make_shared<VariableReferenceExpression> (text); 
                 });
-                addInfix (Token::T_PLUS, [] (ParseContext & context, std::shared_ptr<Expression> left, TokenStream::Iterator & current, TokenStream::Iterator end) { 
-                    current ++;
-                    return std::make_shared<BinaryOperationExpression> (left, context.expressionParser.parse(current, end, context.parser), Token::T_PLUS);
+                addInfix (Token::T_PLUS, [] (ParseContext & context, std::shared_ptr<Expression> left) { 
+                    context.current ++;
+                    return std::make_shared<BinaryOperationExpression> (left, context.parse(), Token::T_PLUS);
                 });
             }
             
@@ -64,10 +69,9 @@ namespace kind
          * Main parser function
          * ============================================================================================================================
          */
-        
-        std::shared_ptr<Expression> ExpressionParser::parse(TokenStream::Iterator & current, TokenStream::Iterator end, Parser & parser)
+
+        std::shared_ptr<Expression> ParseContext::parse ()
         {
-            ParseContext context = { parser, *this };
             Token::Type ttype = current->tokenType ();
             
             if (! eptabs.prefix[ttype])
@@ -76,16 +80,22 @@ namespace kind
                 current ++;
                 return NullExpression::INSTANCE;
             }
-            std::shared_ptr<Expression> left = eptabs.prefix[ttype] (context, current, end);
+            std::shared_ptr<Expression> left = eptabs.prefix[ttype] (*this);
             
             while (current < end)  // note that both prefix and infix parsers should advance the tokenizer
             {
                 ttype = current->tokenType ();
                 if (! eptabs.infix[ttype]) break;
-                left = eptabs.infix[ttype] (context, left, current, end);
+                left = eptabs.infix[ttype] (*this, left);
             }
             
             return left;
         }
-    }
+        std::shared_ptr<Expression> ExpressionParser::parse(TokenStream::Iterator & current, TokenStream::Iterator end, Parser & parser)
+        {
+            using namespace std::placeholders;
+            ParseContext context = { parser, *this, current, end, std::bind(&ParserUtil::unexpectedTokenError, (ParserUtil *)this, _1, _2) };
+            return context.parse ();
+        }
+   }
 }
