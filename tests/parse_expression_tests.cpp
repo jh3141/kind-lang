@@ -62,3 +62,10 @@ TEST_CASE("Infix operators left associative", "[parser]")
 	REQUIRE(std::dynamic_pointer_cast<BinaryOperationExpression>(expr)->left()->type() == Expression::EXPR_TYPE_BINOP);
 	REQUIRE(std::dynamic_pointer_cast<BinaryOperationExpression>(expr)->right()->type() == Expression::EXPR_TYPE_VARREF);
 }
+TEST_CASE("Multiple precedence levels handled appropriately", "[parser]")
+{
+	decl_parse_expr("simple(a,b,c){a + b * c;}");
+	REQUIRE(expr->type() == Expression::EXPR_TYPE_BINOP);
+	REQUIRE(std::dynamic_pointer_cast<BinaryOperationExpression>(expr)->left()->type() == Expression::EXPR_TYPE_VARREF);
+	REQUIRE(std::dynamic_pointer_cast<BinaryOperationExpression>(expr)->right()->type() == Expression::EXPR_TYPE_BINOP);
+}

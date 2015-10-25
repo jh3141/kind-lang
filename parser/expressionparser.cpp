@@ -51,9 +51,13 @@ namespace kind
                     context.current ++;
                     return std::make_shared<VariableReferenceExpression> (text); 
                 });
-                addInfix (Token::T_PLUS, 60, [] (ParseContext & context, std::shared_ptr<Expression> left) { 
+                addInfix (Token::T_PLUS, 110, [] (ParseContext & context, std::shared_ptr<Expression> left) { 
                     context.current ++;
-                    return std::make_shared<BinaryOperationExpression> (left, context.parse(60), Token::T_PLUS);
+                    return std::make_shared<BinaryOperationExpression> (left, context.parse(110), Token::T_PLUS);
+                });
+                addInfix (Token::T_STAR, 120, [] (ParseContext & context, std::shared_ptr<Expression> left) { 
+                    context.current ++;
+                    return std::make_shared<BinaryOperationExpression> (left, context.parse(120), Token::T_STAR);
                 });
             }
             
