@@ -3,9 +3,9 @@ import kind::patterns::Matcher;
 import kind::String;
 import kind::Optional;
 
-class MyMatchDescription : Matcher:String
+class MyMatchDescription : Matcher String
 {
-    unpack(value : string) : Optional:(String,String,String) { 
+    unpack(value : string) : Optional (String,String,String) { 
         exploded := value.explode(" ");
         return 
             exploded.length >= 3 ?  // "?" is an operator that takes a bool on its lhs and returns either 

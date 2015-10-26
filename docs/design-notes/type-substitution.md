@@ -31,4 +31,31 @@ or field, e.g.:
     
 In this case, the type description `Test~[type1 => type2]` produces a compile-time type error.
 
-TODO: design & document syntax for in-place extension of types during substitution.
+For fields that do not have a declared type, a type variable is implicitly created.  This variable
+can be referred to using the syntax `typeof(fieldName)`.  For example:
+
+    class Test {
+       var x;
+    }
+    
+    inst := new Test~[typeof(x) => int];
+
+Overrides and new functions may also be added to classes using the syntax `Type~[methodName => lambda-expression]`, e.g.:
+
+    ints := new ArrayList [int] ~[total => (){ fold (0, (a,b){a+b}) }];
+    ints.add (4);
+    ints.add (5);
+    out.println (ints.total()); // prints 9
+
+or for static references:
+
+    testfn () {
+        out.println("The time is " + DateTime.now());
+    }
+    main () {
+        testfn () ~[ 
+            DateTime => DateTime ~[
+                now => () { DateTime.fromISOString("2015-10-16T00:30:00+0000") }
+            ]
+        ];
+    }
