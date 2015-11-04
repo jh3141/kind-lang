@@ -42,7 +42,7 @@ can be referred to using the syntax `typeof(fieldName)`.  For example:
 
 Overrides and new functions may also be added to classes using the syntax `Type~[methodName => lambda-expression]`, e.g.:
 
-    ints := new ArrayList [int] ~[total => (){ fold (0, (a,b){a+b}) }];
+    ints := new ArrayList [int] ~[total => \ = fold (0, \a,b = a+b)];
     ints.add (4);
     ints.add (5);
     out.println (ints.total()); // prints 9
@@ -55,7 +55,7 @@ or for static references:
     main () {
         testfn () ~[ 
             DateTime => DateTime ~[
-                now => () { DateTime.fromISOString("2015-10-16T00:30:00+0000") }
+                now => \ = DateTime.fromISOString("2015-10-16T00:30:00+0000")
             ]
         ];
     }
