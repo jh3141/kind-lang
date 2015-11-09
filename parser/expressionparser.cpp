@@ -64,11 +64,18 @@ namespace kind
                     }
                     return result;
                 });
+                addPrefixOp (Token::T_MINUS, 140);
                 addBinOp (Token::T_PLUS, 110);
                 addBinOp (Token::T_STAR, 120);
             }
             
             void addPrefix (int id, PrefixParser parser) { prefix[id] = parser; }
+            void addPrefixOp (Token::Type id, int tokenPrecedence) {
+                addPrefix (id, [id, tokenPrecedence] (ParseContext & context) {
+                    context.current ++;
+                    return std::make_shared<UnaryOperationExpression> (context.parse(tokenPrecedence), id);
+                });
+            }
             void addInfix (int id, int tokenPrecedence, InfixParser parser) { 
                 infix[id] = parser;
                 precedence[id] = tokenPrecedence;

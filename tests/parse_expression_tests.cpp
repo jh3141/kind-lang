@@ -110,3 +110,11 @@ TEST_CASE("Complex bracketed expression", "[parser]")
 			        
 	REQUIRE (dump_postfix (expr) == "a b [10] c d [10] e [27] a [10] [27] d a b [27] [10] [27]");
 }
+
+TEST_CASE("Negation as a prefix expression", "[parser]")
+{
+	decl_parse_expr("simple(a) { -a; }");
+	
+	REQUIRE (expr->type() == Expression::EXPR_TYPE_UNOP);
+	REQUIRE (std::dynamic_pointer_cast<UnaryOperationExpression>(expr)->op () == Token::T_MINUS);
+}

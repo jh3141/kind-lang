@@ -20,7 +20,8 @@ namespace kind
 	        enum Type {
 	            EXPR_NULL,
 	            EXPR_TYPE_VARREF,
-	            EXPR_TYPE_BINOP
+	            EXPR_TYPE_BINOP,
+	            EXPR_TYPE_UNOP
 	        };
 	        
             virtual Type type () const = 0;
@@ -61,6 +62,20 @@ namespace kind
 			virtual Type type () const { return EXPR_TYPE_BINOP; }
 			std::shared_ptr<Expression> left() { return left_; }
 			std::shared_ptr<Expression> right() { return right_; }
+			Token::Type op() { return op_; }
+	    };
+	    
+	    class UnaryOperationExpression : public Expression
+	    {
+    	private:
+    		std::shared_ptr<Expression> sub_;
+    		Token::Type op_;
+    	public:
+    		UnaryOperationExpression(std::shared_ptr<Expression> sub, Token::Type op) : sub_(sub), op_(op)
+    		{
+    		}
+			virtual Type type () const { return EXPR_TYPE_UNOP; }
+			std::shared_ptr<Expression> sub() { return sub_; }
 			Token::Type op() { return op_; }
 	    };
 	}
