@@ -152,3 +152,14 @@ TEST_CASE("Function call with multiple parameters", "[parser]")
 	REQUIRE ("c" == dump_postfix (fn->args()[1]));
 	REQUIRE ("d" == dump_postfix (fn->args()[2]));
 }
+
+TEST_CASE("Function call with missing close paren at start", "[parser][errors]")
+{
+	decl_sut("testFunction(a){a(;}");
+	sut.parse();
+	REQUIRE (errors.getErrors().size() == 1);
+	Error error = errors.getErrors()[0];
+	REQUIRE (error.code == Error::ErrorCode::E_UNEXPECTEDTOKEN);
+	REQUIRE (error.firstParameter == "';'");
+	REQUIRE (error.secondParameter == "')' or start of expression");
+}
