@@ -128,3 +128,27 @@ TEST_CASE("Function call operator works", "[parser]")
 	REQUIRE ("a" == dump_postfix (fn->function()));
 	REQUIRE (0 == fn->args().size());
 }
+
+TEST_CASE("Function call allows a single parameter", "[parser]")
+{
+	decl_parse_expr("fncall(a,b) { a(b); }");
+	
+	REQUIRE (expr->type() == Expression::EXPR_TYPE_FNCALL);
+	auto fn = std::dynamic_pointer_cast<FunctionCallExpression>(expr);
+	REQUIRE ("a" == dump_postfix (fn->function()));
+	REQUIRE (1 == fn->args().size());
+	REQUIRE ("b" == dump_postfix (fn->args()[0]));
+}
+
+TEST_CASE("Function call with multiple parameters", "[parser]")
+{
+	decl_parse_expr("fncall(a,b,c,d) { a(b,c,d); }");
+
+	REQUIRE (expr->type() == Expression::EXPR_TYPE_FNCALL);
+	auto fn = std::dynamic_pointer_cast<FunctionCallExpression>(expr);
+	REQUIRE ("a" == dump_postfix (fn->function()));
+	REQUIRE (3 == fn->args().size());
+	REQUIRE ("b" == dump_postfix (fn->args()[0]));
+	REQUIRE ("c" == dump_postfix (fn->args()[1]));
+	REQUIRE ("d" == dump_postfix (fn->args()[2]));
+}

@@ -90,6 +90,15 @@ namespace kind
                 addInfix (Token::T_LPAREN, PREC_BIND, [] (ParseContext & context, std::shared_ptr<Expression> left) {
                    std::shared_ptr<FunctionCallExpression> result = std::make_shared<FunctionCallExpression>(left);
                    context.current ++;
+                   if (context.current->tokenType() != Token::T_RPAREN) // has arguments
+                   {
+                       result->addArgument (context.parse(PREC_COMMA));
+                       while (context.current->tokenType() == Token::T_COMMA)
+                       {
+                           context.current ++;
+                           result->addArgument (context.parse(PREC_COMMA));
+                       }
+                   }
                    context.current ++;
                    return result;
                 });
