@@ -118,3 +118,13 @@ TEST_CASE("Negation as a prefix expression", "[parser]")
 	REQUIRE (expr->type() == Expression::EXPR_TYPE_UNOP);
 	REQUIRE (std::dynamic_pointer_cast<UnaryOperationExpression>(expr)->op () == Token::T_MINUS);
 }
+
+TEST_CASE("Function call operator works", "[parser]")
+{
+	decl_parse_expr("fncall(a) { a(); }");
+	
+	REQUIRE (expr->type() == Expression::EXPR_TYPE_FNCALL);
+	auto fn = std::dynamic_pointer_cast<FunctionCallExpression>(expr);
+	REQUIRE ("a" == dump_postfix (fn->function()));
+	REQUIRE (0 == fn->args().size());
+}

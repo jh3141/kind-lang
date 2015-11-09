@@ -31,8 +31,28 @@ namespace kind
         typedef std::function<std::shared_ptr<Expression>(ParseContext & context)> PrefixParser;
         typedef std::function<std::shared_ptr<Expression>(ParseContext & context, std::shared_ptr<Expression> left)> InfixParser;
         
-        
         /*
+         * Precedence level descriptions, based on C++ precedence levels
+         */
+        #define PREC_ALL 0         // include as much as possibility
+        #define PREC_COMMA 10      // ,
+        #define PREC_ASSIGN 20     // assignents, throw, ?:
+        #define PREC_LOGOR 30
+        #define PREC_LOGAND 40
+        #define PREC_BITOR 50
+        #define PREC_BITXOR 60
+        #define PREC_BITAND 70
+        #define PREC_EQUAL 80      // == and !=
+        #define PREC_COMPARE 90
+        #define PREC_BITSHIFT 100
+        #define PREC_ADDSUB 110
+        #define PREC_MULDIV 120
+        #define PREC_PTRMEMBER 130 // may not be required in this language
+        #define PREC_PREFIX 140    // various prefix operators
+        #define PREC_BIND 150      // misc hard binders (member extraction, function call, etc)
+        #define PREC_SCOPE 160
+        
+         /*
          * ============================================================================================================================
          * Token type table
          * ============================================================================================================================
@@ -64,9 +84,15 @@ namespace kind
                     }
                     return result;
                 });
-                addPrefixOp (Token::T_MINUS, 140);
-                addBinOp (Token::T_PLUS, 110);
-                addBinOp (Token::T_STAR, 120);
+                addPrefixOp (Token::T_MINUS, PREC_PREFIX);
+                addBinOp (Token::T_PLUS, PREC_ADDSUB);
+                addBinOp (Token::T_STAR, PREC_MULDIV);
+                addInfix (Token::T_LPAREN, PREC_BIND, [] (ParseContext & context, std::shared_ptr<Expression> left) {
+                   std::shared_ptr<FunctionCallExpression> result = std::make_shared<FunctionCallExpression>(left);
+                   context.current ++;
+                   context.current ++;
+                   return result;
+                });
             }
             
             void addPrefix (int id, PrefixParser parser) { prefix[id] = parser; }
