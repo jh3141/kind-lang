@@ -33,6 +33,8 @@ extern bool kind_test_verbose;
 	REQUIRE(block->expressions().size() == 1); \
 	std::shared_ptr<Expression> expr = block->expressions()[0]
 	
+#define BOP(x) std::dynamic_pointer_cast<BinaryOperationExpression>(x)
+
 TEST_CASE("Variable references know the name of the variable they reference", "[parser]")
 {
 	decl_parse_expr("simple(a){a;}");
@@ -59,13 +61,52 @@ TEST_CASE("Infix operators left associative", "[parser]")
 {
 	decl_parse_expr("simple(a,b,c){a + b + c;}");
 	REQUIRE(expr->type() == Expression::EXPR_TYPE_BINOP);
-	REQUIRE(std::dynamic_pointer_cast<BinaryOperationExpression>(expr)->left()->type() == Expression::EXPR_TYPE_BINOP);
-	REQUIRE(std::dynamic_pointer_cast<BinaryOperationExpression>(expr)->right()->type() == Expression::EXPR_TYPE_VARREF);
+	REQUIRE(BOP(expr)->left()->type() == Expression::EXPR_TYPE_BINOP);
+	REQUIRE(BOP(expr)->right()->type() == Expression::EXPR_TYPE_VARREF);
 }
 TEST_CASE("Multiple precedence levels handled appropriately", "[parser]")
 {
 	decl_parse_expr("simple(a,b,c){a + b * c;}");
 	REQUIRE(expr->type() == Expression::EXPR_TYPE_BINOP);
-	REQUIRE(std::dynamic_pointer_cast<BinaryOperationExpression>(expr)->left()->type() == Expression::EXPR_TYPE_VARREF);
-	REQUIRE(std::dynamic_pointer_cast<BinaryOperationExpression>(expr)->right()->type() == Expression::EXPR_TYPE_BINOP);
+	REQUIRE(BOP(expr)->left()->type() == Expression::EXPR_TYPE_VARREF);
+	REQUIRE(BOP(expr)->right()->type() == Expression::EXPR_TYPE_BINOP);
+}
+TEST_CASE("Bracketed expressions handled correctly", "[parser]")
+{
+	decl_parse_expr("simple(a,b,c){a * (b + c);}");
+	REQUIRE(expr->type() == Expression::EXPR_TYPE_BINOP);
+	REQUIRE(BOP(expr)->op() == Token::T_STAR);
+	REQUIRE(BOP(expr)->right()->type() == Expression::EXPR_TYPE_BINOP);
+}
+TEST_CASE("Bracket with missing close bracket", "[parser][errors]")
+{
+	decl_sut("testFunction(a,b){(a+b;}");
+	sut.parse();
+	REQUIRE (errors.getErrors().size() == 1);
+	Error error = errors.getErrors()[0];
+	REQUIRE (error.code == Error::ErrorCode::E_UNEXPECTEDTOKEN);
+	REQUIRE (error.firstParameter == "';'");
+	REQUIRE (error.secondParameter == "')' or operator");
+}
+std::string dump_postfix (std::shared_ptr<Expression> expr)
+{
+	switch (expr->type())
+	{
+		case Expression::EXPR_TYPE_VARREF: 
+			return std::dynamic_pointer_cast<VariableReferenceExpression>(expr)->variableName();
+		case Expression::EXPR_TYPE_BINOP: 
+			return  dump_postfix(BOP(expr)->left()) + " " + 
+					dump_postfix(BOP(expr)->right()) + " [" + 
+					std::to_string(BOP(expr)->op()) + "]";
+	}
+	return std::string("(unknown expression type ") + to_string(expr->type()) + ")";
+}
+
+TEST_CASE("Complex bracketed expression", "[parser]")
+{
+	decl_parse_expr("complex(a,b,c,d,e) {" 
+			        "  (a * b) + (c * d + e) * a + (d * (a + b));"
+			        "}");
+			        
+	REQUIRE (dump_postfix (expr) == "a b [10] c d [10] e [27] a [10] [27] d a b [27] [10] [27]");
 }

@@ -51,6 +51,19 @@ namespace kind
                     context.current ++;
                     return std::make_shared<VariableReferenceExpression> (text); 
                 });
+                addPrefix (Token::T_LPAREN, [] (ParseContext & context) {
+                    context.current ++;
+                    auto result = context.parse(0);
+                    if (context.current->tokenType() != Token::T_RPAREN)
+                    {
+                        context.unexpectedTokenError(context.current, "')' or operator");
+                    }
+                    else
+                    {
+                        context.current ++;
+                    }
+                    return result;
+                });
                 addBinOp (Token::T_PLUS, 110);
                 addBinOp (Token::T_STAR, 120);
             }

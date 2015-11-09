@@ -13,64 +13,64 @@ namespace kind
         public:
             enum Type
             {
-                T_EOF,
-        		T_ID,
-                T_INTLITERAL,
-				T_STRINGLITERAL,
-                T_COMMA,
-            	T_EXCL,
-        		T_MOD,
-        		T_XOR,
-        		T_AND,
-        		T_OR,
-        		T_STAR,
-        		T_LPAREN,
-        		T_RPAREN,
-        		T_LBRACKET,
-        		T_RBRACKET,
-        		T_LBRACE,
-        		T_RBRACE,
-        		T_APOS,
-        		T_TILDE,
-        		T_SEMI,
-        		T_SLASH,
-        		T_QUERY,
-        		T_COLON,
-        		T_LT,
-        		T_GT,
-        		T_DOT,
-        		T_MINUS,
-        		T_PLUS,
-        		T_EQ,
-        		T_LXOR,
-        		T_LAND,
-        		T_LOR,
-        		T_SCOPE,
-        		T_PLUS_EQ,
-        		T_MINUS_EQ,
-        		T_STAR_EQ,
-        		T_SLASH_EQ,
-        		T_MOD_EQ,
-        		T_XOR_EQ,
-        		T_AND_EQ,
-        		T_OR_EQ,
-        		T_DOUBLEMINUS,
-        		T_DOUBLEPLUS,
-        		T_ARROW,
-        		T_LTE,
-        		T_GTE,
-        		T_LSH,
-        		T_RSH,
-        		T_NEQ,
-				T_IMPORT,
-				T_VAR,
-				T_CLASS,
-				T_PRIVATE,
-				T_RETURN,
-				T_NEW,
-				T_WHILE,
-				T_IF,
-				T_UNTERMINATEDSTRING,
+                T_EOF,                  // 0
+        		T_ID,                   // 1
+                T_INTLITERAL,           // 2    
+				T_STRINGLITERAL,        // 3
+                T_COMMA,                // 4
+            	T_EXCL,                 // 5
+        		T_MOD,                  // 6
+        		T_XOR,                  // 7
+        		T_AND,                  // 8
+        		T_OR,                   // 9
+        		T_STAR,                 // 10
+        		T_LPAREN,               // 11
+        		T_RPAREN,               // 12
+        		T_LBRACKET,             // 13
+        		T_RBRACKET,             // 14
+        		T_LBRACE,               // 15
+        		T_RBRACE,               // 16
+        		T_APOS,                 // 17
+        		T_TILDE,                // 18
+        		T_SEMI,                 // 19
+        		T_SLASH,                // 20
+        		T_QUERY,                // 21
+        		T_COLON,                // 22
+        		T_LT,                   // 23
+        		T_GT,                   // 24
+        		T_DOT,                  // 25
+        		T_MINUS,                // 26
+        		T_PLUS,                 // 27
+        		T_EQ,                   // 28
+        		T_LXOR,                 // 29
+        		T_LAND,                 // 30
+        		T_LOR,                  // 31
+        		T_SCOPE,                // 32
+        		T_PLUS_EQ,              // 33
+        		T_MINUS_EQ,             // 34
+        		T_STAR_EQ,              // 35
+        		T_SLASH_EQ,             // 36
+        		T_MOD_EQ,               // 37
+        		T_XOR_EQ,               // 38
+        		T_AND_EQ,               // 39
+        		T_OR_EQ,                // 40
+        		T_DOUBLEMINUS,          // 41
+        		T_DOUBLEPLUS,           // 42
+        		T_ARROW,                // 43
+        		T_LTE,                  // 44
+        		T_GTE,                  // 45
+        		T_LSH,                  // 46
+        		T_RSH,                  // 47
+        		T_NEQ,                  // 48
+				T_IMPORT,               // 49
+				T_VAR,                  // 50
+				T_CLASS,                // 51
+				T_PRIVATE,              // 52
+				T_RETURN,               // 53
+				T_NEW,                  // 54
+				T_WHILE,                // 55
+				T_IF,                   // 56
+				T_UNTERMINATEDSTRING,   // 57
 				T_MAX
             };
             
