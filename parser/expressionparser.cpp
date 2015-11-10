@@ -113,6 +113,13 @@ namespace kind
                     context.current ++;
                     return result;
                 });
+                addInfix(Token::T_DOT, PREC_BIND, [] (ParseContext & context, std::shared_ptr<Expression> left) {
+                    context.current ++;
+                    // FIXME error handling
+                    auto result = std::make_shared<MemberSelectionExpression> (left, context.current->text());
+                    context.current ++;
+                    return result;
+                });
             }
             
             void addPrefix (int id, PrefixParser parser) { prefix[id] = parser; }

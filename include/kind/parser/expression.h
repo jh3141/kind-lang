@@ -22,7 +22,8 @@ namespace kind
 	            EXPR_TYPE_VARREF,
 	            EXPR_TYPE_BINOP,
 	            EXPR_TYPE_UNOP,
-	            EXPR_TYPE_FNCALL
+	            EXPR_TYPE_FNCALL,
+	            EXPR_TYPE_MEMBERSELECT
 	        };
 	        
             virtual Type type () const = 0;
@@ -94,6 +95,22 @@ namespace kind
 	    	std::shared_ptr<Expression> function () { return function_; }
 	    	std::vector<std::shared_ptr<Expression>> & args () { return args_; }
 	    };
+	    
+   	    class MemberSelectionExpression : public Expression
+	    {
+	    private:
+	    	std::shared_ptr<Expression> left_;
+	    	std::string right_;
+	    public:
+			MemberSelectionExpression(std::shared_ptr<Expression> left, std::string right) 
+				: left_(std::move(left)), right_(std::move(right))
+			{
+			}
+			virtual Type type () const { return EXPR_TYPE_MEMBERSELECT; }
+			std::shared_ptr<Expression> left() { return left_; }
+			std::string right() { return right_; }
+	    };
+
 	}
 }
 

@@ -174,3 +174,13 @@ TEST_CASE("Function call with missing close paren after args", "[parser][errors]
 	REQUIRE (error.firstParameter == "';'");
 	REQUIRE (error.secondParameter == "')', ',' or operator");
 }
+
+TEST_CASE("Dot expression", "[parser]")
+{
+	decl_parse_expr("fncall(a) { a.b; }");
+	
+	REQUIRE (expr->type() == Expression::EXPR_TYPE_MEMBERSELECT);
+	auto ee = std::dynamic_pointer_cast<MemberSelectionExpression>(expr);
+	REQUIRE ("a" == dump_postfix (ee->left()));
+	REQUIRE ("b" == ee->right());
+}
