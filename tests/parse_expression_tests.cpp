@@ -184,3 +184,13 @@ TEST_CASE("Dot expression", "[parser]")
 	REQUIRE ("a" == dump_postfix (ee->left()));
 	REQUIRE ("b" == ee->right());
 }
+TEST_CASE("Dot must be followed by identifier", "[parser][errors]")
+{
+	decl_sut("testFunction(a){a.1;}");
+	sut.parse();
+	REQUIRE (errors.getErrors().size() == 1);
+	Error error = errors.getErrors()[0];
+	REQUIRE (error.code == Error::ErrorCode::E_UNEXPECTEDTOKEN);
+	REQUIRE (error.firstParameter == "integer literal");
+	REQUIRE (error.secondParameter == "identifier");
+}

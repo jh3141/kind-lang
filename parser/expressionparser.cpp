@@ -115,8 +115,13 @@ namespace kind
                 });
                 addInfix(Token::T_DOT, PREC_BIND, [] (ParseContext & context, std::shared_ptr<Expression> left) {
                     context.current ++;
-                    // FIXME error handling
-                    auto result = std::make_shared<MemberSelectionExpression> (left, context.current->text());
+                    if (context.current->tokenType() != Token::T_ID)
+                    {
+                        context.unexpectedTokenError(context.current, "identifier");
+                        context.current ++;
+                        return left;
+                    }
+                    std::shared_ptr<Expression> result = std::make_shared<MemberSelectionExpression> (left, context.current->text());
                     context.current ++;
                     return result;
                 });
