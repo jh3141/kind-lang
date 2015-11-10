@@ -194,3 +194,30 @@ TEST_CASE("Dot must be followed by identifier", "[parser][errors]")
 	REQUIRE (error.firstParameter == "integer literal");
 	REQUIRE (error.secondParameter == "identifier");
 }
+
+TEST_CASE("Miscellaneous binary operators (arithmetic)", "[parser]")
+{
+	decl_parse_expr("complex(a,b,c,d,e) {" 
+			        "   a - b / c + d % e;"
+			        "}");
+			        
+	REQUIRE (dump_postfix (expr) == "a b c [20] [26] d e [6] [27]");
+}
+
+TEST_CASE("Miscellaneous binary operators (bitwise)", "[parser]")
+{
+	decl_parse_expr("complex(a,b,c,d,e) {" 
+			        "   a << b | c >> d & e;"
+			        "}");
+			        
+	REQUIRE (dump_postfix (expr) == "a b [46] c d [47] e [8] [9]");
+}
+
+TEST_CASE("Miscellaneous binary operators (comparisons and logical)", "[parser]")
+{
+	decl_parse_expr("complex(a,b,c,d,e) {\n" 
+			        "   a < b && b > c || d == e ^^ a <= c || b >= d || e != c;\n"
+			        "}");
+			        
+	REQUIRE (dump_postfix (expr) == "a b [23] b c [24] [30] d e [49] [31] a c [44] [29] b d [45] [31] e c [48] [31]");
+}

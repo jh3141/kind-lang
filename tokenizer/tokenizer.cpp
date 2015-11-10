@@ -66,6 +66,7 @@ namespace kind
             multiCharPunctuation['<<'] = Token::Type::T_LSH;
             multiCharPunctuation['>>'] = Token::Type::T_RSH;
             multiCharPunctuation['!='] = Token::Type::T_NEQ;
+            multiCharPunctuation['=='] = Token::Type::T_DOUBLEEQ;
 			keywords["import"] = Token::Type::T_IMPORT;
 			keywords["var"] = Token::Type::T_VAR;
 			keywords["class"] = Token::Type::T_CLASS;

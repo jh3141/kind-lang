@@ -54,6 +54,7 @@ std::string kind::tokenizer::Token::typeName ()
 		case T_LSH:	return "'>>'";
 		case T_RSH:	return "'<<'";
 		case T_NEQ:	return "'!='";
+		case T_DOUBLEEQ: return "'=='";
 		case T_IMPORT:	return "'import'";
 		case T_VAR:	return "'var'";
 		case T_CLASS:	return "'class'";

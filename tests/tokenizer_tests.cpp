@@ -95,7 +95,7 @@ TEST_CASE("Various single-character punctuation identified", "[tokenizer]")
 
 TEST_CASE("Various double-character punctuation identified", "[tokenizer]")
 {
-    decl_sut("^^ && || :: += -= *= /= %= ^= &= |= -- ++ -> <= >= << >> !=");
+    decl_sut("^^ && || :: += -= *= /= %= ^= &= |= -- ++ -> <= >= << >> != ==");
     
 	REQUIRE(sut.nextToken().tokenType() == Token::Type::T_LXOR);
 	REQUIRE(sut.nextToken().tokenType() == Token::Type::T_LAND);
@@ -117,6 +117,7 @@ TEST_CASE("Various double-character punctuation identified", "[tokenizer]")
 	REQUIRE(sut.nextToken().tokenType() == Token::Type::T_LSH);
 	REQUIRE(sut.nextToken().tokenType() == Token::Type::T_RSH);
 	REQUIRE(sut.nextToken().tokenType() == Token::Type::T_NEQ);
+    REQUIRE(sut.nextToken().tokenType() == Token::Type::T_DOUBLEEQ);
     REQUIRE(sut.nextToken().tokenType() == Token::Type::T_EOF);       
 }
 

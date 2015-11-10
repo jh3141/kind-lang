@@ -62,15 +62,16 @@ namespace kind
         		T_LSH,                  // 46
         		T_RSH,                  // 47
         		T_NEQ,                  // 48
-				T_IMPORT,               // 49
-				T_VAR,                  // 50
-				T_CLASS,                // 51
-				T_PRIVATE,              // 52
-				T_RETURN,               // 53
-				T_NEW,                  // 54
-				T_WHILE,                // 55
-				T_IF,                   // 56
-				T_UNTERMINATEDSTRING,   // 57
+        		T_DOUBLEEQ,             // 49
+				T_IMPORT,               // 50
+				T_VAR,                  // 51
+				T_CLASS,                // 52
+				T_PRIVATE,              // 53
+				T_RETURN,               // 54
+				T_NEW,                  // 55
+				T_WHILE,                // 56
+				T_IF,                   // 57
+				T_UNTERMINATEDSTRING,   // 58
 				T_MAX
             };
             

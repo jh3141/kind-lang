@@ -85,8 +85,30 @@ namespace kind
                     return result;
                 });
                 addPrefixOp (Token::T_MINUS, PREC_PREFIX);
+                
+                addBinOp (Token::T_LSH, PREC_BITSHIFT);
+                addBinOp (Token::T_RSH, PREC_BITSHIFT);
+                
+                addBinOp (Token::T_AND, PREC_BITAND);
+                addBinOp (Token::T_OR, PREC_BITOR);
+                addBinOp (Token::T_LAND, PREC_LOGAND);
+                addBinOp (Token::T_LOR, PREC_LOGOR);
+                addBinOp (Token::T_LXOR, PREC_LOGOR);
+                
+                addBinOp (Token::T_DOUBLEEQ, PREC_COMPARE);
+                addBinOp (Token::T_NEQ, PREC_COMPARE);
+                addBinOp (Token::T_LT, PREC_COMPARE);
+                addBinOp (Token::T_LTE, PREC_COMPARE);
+                addBinOp (Token::T_GT, PREC_COMPARE);
+                addBinOp (Token::T_GTE, PREC_COMPARE);
+                
                 addBinOp (Token::T_PLUS, PREC_ADDSUB);
+                addBinOp (Token::T_MINUS, PREC_ADDSUB);
+                
                 addBinOp (Token::T_STAR, PREC_MULDIV);
+                addBinOp (Token::T_SLASH, PREC_MULDIV);
+                addBinOp (Token::T_MOD, PREC_MULDIV);
+                
                 addInfix (Token::T_LPAREN, PREC_BIND, [this] (ParseContext & context, std::shared_ptr<Expression> left) {
                     std::shared_ptr<FunctionCallExpression> result = std::make_shared<FunctionCallExpression>(left);
                     context.current ++;
