@@ -85,6 +85,8 @@ namespace kind
                     return result;
                 });
                 addPrefixOp (Token::T_MINUS, PREC_PREFIX);
+                addPrefixOp (Token::T_TILDE, PREC_PREFIX);
+                addPrefixOp (Token::T_EXCL, PREC_PREFIX);
                 
                 addBinOp (Token::T_LSH, PREC_BITSHIFT);
                 addBinOp (Token::T_RSH, PREC_BITSHIFT);

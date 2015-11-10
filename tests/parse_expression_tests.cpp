@@ -221,3 +221,17 @@ TEST_CASE("Miscellaneous binary operators (comparisons and logical)", "[parser]"
 			        
 	REQUIRE (dump_postfix (expr) == "a b [23] b c [24] [30] d e [49] [31] a c [44] [29] b d [45] [31] e c [48] [31]");
 }
+
+TEST_CASE("Bitwise not operator", "[parser]")
+{
+	decl_parse_expr("fn(a) { ~a; }");
+	REQUIRE (expr->type() == Expression::EXPR_TYPE_UNOP);
+	REQUIRE (std::dynamic_pointer_cast<UnaryOperationExpression>(expr)->op () == Token::T_TILDE);
+}
+
+TEST_CASE("Logical not operator", "[parser]")
+{
+	decl_parse_expr("fn(a) { !a; }");
+	REQUIRE (expr->type() == Expression::EXPR_TYPE_UNOP);
+	REQUIRE (std::dynamic_pointer_cast<UnaryOperationExpression>(expr)->op () == Token::T_EXCL);
+}
