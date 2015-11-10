@@ -88,25 +88,30 @@ namespace kind
                 addBinOp (Token::T_PLUS, PREC_ADDSUB);
                 addBinOp (Token::T_STAR, PREC_MULDIV);
                 addInfix (Token::T_LPAREN, PREC_BIND, [this] (ParseContext & context, std::shared_ptr<Expression> left) {
-                   std::shared_ptr<FunctionCallExpression> result = std::make_shared<FunctionCallExpression>(left);
-                   context.current ++;
+                    std::shared_ptr<FunctionCallExpression> result = std::make_shared<FunctionCallExpression>(left);
+                    context.current ++;
                    
-                   if (isStartOfExpr(context.current->tokenType())) // has arguments
-                   {
-                       result->addArgument (context.parse(PREC_COMMA));
-                       while (context.current->tokenType() == Token::T_COMMA)
-                       {
-                           context.current ++;
-                           result->addArgument (context.parse(PREC_COMMA));
-                       }
-                   }
-                   else if (context.current->tokenType() != Token::T_RPAREN)
-                   {
-                       context.unexpectedTokenError(context.current, "')' or start of expression");
-                       return result;
-                   }
-                   context.current ++;
-                   return result;
+                    if (isStartOfExpr(context.current->tokenType())) // has arguments
+                    {
+                        result->addArgument (context.parse(PREC_COMMA));
+                        while (context.current->tokenType() == Token::T_COMMA)
+                        {
+                            context.current ++;
+                            result->addArgument (context.parse(PREC_COMMA));
+                        }
+                        if (context.current->tokenType() != Token::T_RPAREN)
+                        {
+                            context.unexpectedTokenError(context.current, "')', ',' or operator");
+                            return result;
+                        }
+                    }
+                    else if (context.current->tokenType() != Token::T_RPAREN)
+                    {
+                        context.unexpectedTokenError(context.current, "')' or start of expression");
+                        return result;
+                    }
+                    context.current ++;
+                    return result;
                 });
             }
             

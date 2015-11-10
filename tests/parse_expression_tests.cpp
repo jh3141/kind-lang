@@ -163,3 +163,14 @@ TEST_CASE("Function call with missing close paren at start", "[parser][errors]")
 	REQUIRE (error.firstParameter == "';'");
 	REQUIRE (error.secondParameter == "')' or start of expression");
 }
+
+TEST_CASE("Function call with missing close paren after args", "[parser][errors]")
+{
+	decl_sut("testFunction(a,b){a(b;}");
+	sut.parse();
+	REQUIRE (errors.getErrors().size() == 1);
+	Error error = errors.getErrors()[0];
+	REQUIRE (error.code == Error::ErrorCode::E_UNEXPECTEDTOKEN);
+	REQUIRE (error.firstParameter == "';'");
+	REQUIRE (error.secondParameter == "')', ',' or operator");
+}
