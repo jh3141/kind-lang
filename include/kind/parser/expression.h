@@ -23,7 +23,8 @@ namespace kind
 	            EXPR_TYPE_BINOP,
 	            EXPR_TYPE_UNOP,
 	            EXPR_TYPE_FNCALL,
-	            EXPR_TYPE_MEMBERSELECT
+	            EXPR_TYPE_MEMBERSELECT,
+	            EXPR_TYPE_INTLITERAL
 	        };
 	        
             virtual Type type () const = 0;
@@ -111,6 +112,19 @@ namespace kind
 			std::string right() { return right_; }
 	    };
 
+		class IntegerLiteralExpression : public Expression
+		{
+		private:
+			int value;			// FIXME should be stored in a format that can overflow bounds and catch errors
+		public:
+			IntegerLiteralExpression(std::string literal)
+				: value(std::stoi(literal))
+			{
+			}
+			
+			virtual Type type () const { return EXPR_TYPE_INTLITERAL; }
+			int intValue () { return value; }
+		};
 	}
 }
 

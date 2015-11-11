@@ -235,3 +235,10 @@ TEST_CASE("Logical not operator", "[parser]")
 	REQUIRE (expr->type() == Expression::EXPR_TYPE_UNOP);
 	REQUIRE (std::dynamic_pointer_cast<UnaryOperationExpression>(expr)->op () == Token::T_EXCL);
 }
+
+TEST_CASE("Integer literals", "[parser]")
+{
+	decl_parse_expr("fn() { 123; }");
+	REQUIRE (expr->type() == Expression::EXPR_TYPE_INTLITERAL);
+	REQUIRE (std::dynamic_pointer_cast<IntegerLiteralExpression>(expr)->intValue () == 123);
+}
