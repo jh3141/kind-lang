@@ -71,6 +71,11 @@ namespace kind
                     context.current ++;
                     return std::make_shared<IntegerLiteralExpression> (text); 
                 });
+                addPrefix (Token::T_STRINGLITERAL, [] (ParseContext & context) {
+                    auto text = context.current->text ();
+                    context.current ++;
+                    return std::make_shared<StringLiteralExpression> (text);
+                });
                 addPrefix (Token::T_ID, [] (ParseContext & context) { 
                     auto text = context.current->text();
                     context.current ++;

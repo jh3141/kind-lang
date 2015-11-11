@@ -24,7 +24,8 @@ namespace kind
 	            EXPR_TYPE_UNOP,
 	            EXPR_TYPE_FNCALL,
 	            EXPR_TYPE_MEMBERSELECT,
-	            EXPR_TYPE_INTLITERAL
+	            EXPR_TYPE_INTLITERAL,
+	            EXPR_TYPE_STRINGLITERAL
 	        };
 	        
             virtual Type type () const = 0;
@@ -124,6 +125,19 @@ namespace kind
 			
 			virtual Type type () const { return EXPR_TYPE_INTLITERAL; }
 			int intValue () { return value; }
+		};
+		
+		class StringLiteralExpression : public Expression
+		{
+		private:
+			std::string value;
+		public:
+			StringLiteralExpression (std::string value) : value(value)
+			{
+			}
+			
+			virtual Type type () const { return EXPR_TYPE_STRINGLITERAL; }
+			std::string stringValue() { return value; }
 		};
 	}
 }
